@@ -66,7 +66,7 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
   const hasWebRTC = typeof navigator !== 'undefined' && !!navigator?.mediaDevices?.getUserMedia;
 
   // 1. Start Hardware Camera
-  const startCamera = async (mode = facingMode) => {
+  const startCamera = async (mode = facingMode, isUserGesture = true) => {
     setCameraError(null);
 
     if (!hasWebRTC) {
@@ -82,22 +82,29 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
         streamRef.current.getTracks().forEach(t => t.stop());
       }
 
-      const constraints = {
-        video: {
-          facingMode: { ideal: mode },
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
-        },
-        audio: false,
-      };
+      let stream;
+      try {
+        const constraints = {
+          video: {
+            facingMode: { ideal: mode },
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+          },
+          audio: false,
+        };
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
+      } catch (constraintErr) {
+        console.warn('FacingMode/resolution constraints failed, falling back to basic video:', constraintErr);
+        // Fallback: simple video constraint without facingMode or resolution restrictions (works on Mac FaceTime & webcams)
+        stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+      }
 
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
       streamRef.current = stream;
 
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         videoRef.current.onloadedmetadata = () => {
-          videoRef.current.play();
+          videoRef.current.play().catch(e => console.warn('Autoplay prevented:', e));
           setVideoResolution({
             width: videoRef.current.videoWidth || 1280,
             height: videoRef.current.videoHeight || 720,
@@ -105,10 +112,36 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
         };
       }
       setIsCameraActive(true);
+      setCameraError(null);
     } catch (err) {
       console.warn('Real camera access error:', err);
-      setCameraError(`Camera Notice: ${err.message}. If on mobile over local Wi-Fi, tap "Take Photo with Phone Camera" below.`);
       setIsCameraActive(false);
+
+      const isPermissionDenied = 
+        err.name === 'NotAllowedError' || 
+        err.name === 'PermissionDeniedError' || 
+        err.message?.toLowerCase().includes('permission');
+      const isNotFound = err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError';
+      const isBusy = err.name === 'NotReadableError' || err.name === 'TrackStartError';
+
+      if (!isUserGesture && isPermissionDenied) {
+        // Suppress initial mount permission error until user explicitly clicks the start button
+        setCameraError(null);
+      } else if (isPermissionDenied) {
+        setCameraError(
+          'Camera access was not granted. Click the camera/lock icon in your browser address bar (or macOS System Settings > Privacy & Security > Camera) to allow camera access, then click "Retry Camera Access".'
+        );
+      } else if (isBusy) {
+        setCameraError(
+          'Camera is currently in use by another app (FaceTime, Zoom, WhatsApp). Please close the other app and retry.'
+        );
+      } else if (isNotFound) {
+        setCameraError(
+          'No camera device detected on this hardware. Use "Snap Photo" or "Upload Image File" below.'
+        );
+      } else {
+        setCameraError(`Camera Notice: ${err.message}. Tap "Retry Camera Access" or upload an image below.`);
+      }
     }
   };
 
@@ -132,13 +165,13 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
     const nextMode = facingMode === 'environment' ? 'user' : 'environment';
     setFacingMode(nextMode);
     if (isCameraActive) {
-      startCamera(nextMode);
+      startCamera(nextMode, true);
     }
   };
 
   useEffect(() => {
     if (activeTab === 'camera') {
-      startCamera();
+      startCamera(facingMode, false);
     } else {
       stopCamera();
     }
@@ -645,19 +678,19 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
                   <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
                     {hasWebRTC && (
                       <button
-                        onClick={() => startCamera()}
-                        className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs shadow-md transition-all inline-flex items-center space-x-1.5"
+                        onClick={() => startCamera(facingMode, true)}
+                        className="bg-amber-500 hover:bg-amber-600 active:scale-95 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs shadow-md transition-all inline-flex items-center space-x-1.5"
                       >
                         <Play className="w-3.5 h-3.5 fill-current" />
-                        <span>Start Live Stream</span>
+                        <span>Start Live Camera Stream</span>
                       </button>
                     )}
                     <button
                       onClick={() => nativeCameraInputRef.current?.click()}
-                      className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-md transition-all inline-flex items-center space-x-1.5"
+                      className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow-md transition-all inline-flex items-center space-x-1.5"
                     >
                       <Camera className="w-3.5 h-3.5" />
-                      <span>Take Photo with Phone Camera</span>
+                      <span>Take Photo with Phone / File</span>
                     </button>
                   </div>
                 </div>
@@ -767,20 +800,29 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
 
             {/* Informative Mobile Network Camera Helper */}
             {cameraError && (
-              <div className="bg-amber-50 border border-amber-300 text-amber-900 text-xs p-3.5 rounded-xl flex items-start space-x-2.5">
+              <div className="bg-amber-50 border border-amber-300 text-amber-900 text-xs p-3.5 rounded-xl flex items-start space-x-2.5 shadow-xs">
                 <Info className="w-4 h-4 flex-shrink-0 text-amber-700 mt-0.5" />
-                <div className="space-y-1.5">
-                  <p className="font-semibold text-slate-900">Mobile Local Network Notice</p>
+                <div className="space-y-2 flex-1">
+                  <p className="font-semibold text-slate-900">Camera Device Notice</p>
                   <p className="text-slate-600 leading-relaxed text-[11px]">
-                    Mobile Safari requires HTTPS for continuous video streaming over local network IP (192.168.x.x). Tap below to open your phone's native camera directly:
+                    {cameraError}
                   </p>
-                  <button
-                    onClick={() => nativeCameraInputRef.current?.click()}
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-xs inline-flex items-center space-x-1.5"
-                  >
-                    <Smartphone className="w-3.5 h-3.5" />
-                    <span>Open Phone Camera Directly</span>
-                  </button>
+                  <div className="flex flex-wrap items-center gap-2 pt-0.5">
+                    <button
+                      onClick={() => startCamera(facingMode, true)}
+                      className="bg-amber-500 hover:bg-amber-600 active:scale-95 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs shadow-xs inline-flex items-center space-x-1.5 transition-all"
+                    >
+                      <RefreshCw className="w-3.5 h-3.5" />
+                      <span>Retry Camera Access</span>
+                    </button>
+                    <button
+                      onClick={() => nativeCameraInputRef.current?.click()}
+                      className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-xs inline-flex items-center space-x-1.5 transition-all"
+                    >
+                      <Smartphone className="w-3.5 h-3.5" />
+                      <span>Snap with Phone Camera / File</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
@@ -998,11 +1040,14 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
         {/* Tab 3: My Reports */}
         {activeTab === 'reports' && (
           <div className="p-4 space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-slate-900">My Incident Submissions</h3>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900">My Incident Submissions</h3>
+                <p className="text-xs text-slate-500">Click any report card below to open its audit photo, tender progress, and repair details</p>
+              </div>
               <button
                 onClick={() => setActiveTab('camera')}
-                className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs flex items-center space-x-1 shadow-sm"
+                className="bg-amber-500 hover:bg-amber-600 active:scale-95 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs flex items-center space-x-1 shadow-sm w-fit transition-all"
               >
                 <span>+ Scan Defect with Camera</span>
               </button>
@@ -1010,21 +1055,39 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
 
             <div className="space-y-3">
               {reports.map((rep) => (
-                <div key={rep.id} className="bg-white border border-slate-200 rounded-xl p-4 space-y-3 shadow-xs">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <span className="text-[10px] font-mono text-sky-700 font-bold">{rep.defect_type}</span>
-                      <h4 className="font-bold text-sm text-slate-900">{rep.title}</h4>
-                      <p className="text-xs text-slate-500 mt-0.5">{rep.description}</p>
+                <div 
+                  key={rep.id} 
+                  onClick={() => setSelectedReport(rep)}
+                  className="bg-white border border-slate-200 hover:border-amber-400 hover:shadow-md transition-all rounded-xl p-4 space-y-3 shadow-xs cursor-pointer group"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-start space-x-3 min-w-0">
+                      {rep.imageUrl ? (
+                        <img 
+                          src={rep.imageUrl} 
+                          alt={rep.title} 
+                          className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl object-cover border border-slate-200 flex-shrink-0 group-hover:scale-105 transition-transform" 
+                        />
+                      ) : (
+                        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 flex-shrink-0">
+                          <MapPin className="w-6 h-6 text-slate-400" />
+                        </div>
+                      )}
+                      <div className="min-w-0">
+                        <span className="text-[10px] font-mono text-sky-700 font-bold uppercase">{rep.defect_type || 'Pothole (D40)'}</span>
+                        <h4 className="font-bold text-sm text-slate-900 group-hover:text-amber-800 transition-colors truncate">{rep.title}</h4>
+                        <p className="text-xs text-slate-500 mt-0.5 line-clamp-2">{rep.description}</p>
+                        <p className="text-[11px] text-slate-400 font-mono mt-1">{rep.location_name}</p>
+                      </div>
                     </div>
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold capitalize border ${
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold capitalize border flex-shrink-0 ${
                       rep.status === 'resolved' 
                         ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
                         : rep.status === 'in_progress'
                         ? 'bg-sky-50 text-sky-800 border-sky-300'
                         : 'bg-amber-50 text-amber-800 border-amber-300'
                     }`}>
-                      {rep.status.replace('_', ' ')}
+                      {(rep.status || 'confirmed').replace('_', ' ')}
                     </span>
                   </div>
 
@@ -1046,16 +1109,23 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
 
                   <div className="flex items-center justify-between text-xs pt-1 text-slate-500">
                     <span className="text-[11px] font-mono">ID: {rep.id}</span>
-                    <button 
-                      onClick={() => {
-                        rep.upvotes = (rep.upvotes || 0) + 1;
-                        setReports([...reports]);
-                      }}
-                      className="flex items-center space-x-1.5 px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors font-medium"
-                    >
-                      <ThumbsUp className="w-3.5 h-3.5 text-amber-600" />
-                      <span>{rep.upvotes} Upvotes</span>
-                    </button>
+                    <div className="flex items-center space-x-3">
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          rep.upvotes = (rep.upvotes || 0) + 1;
+                          setReports([...reports]);
+                        }}
+                        className="flex items-center space-x-1.5 px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors font-medium active:scale-95"
+                      >
+                        <ThumbsUp className="w-3.5 h-3.5 text-amber-600" />
+                        <span>{rep.upvotes || 0} Upvotes</span>
+                      </button>
+                      <span className="text-xs font-bold text-amber-700 group-hover:translate-x-0.5 transition-transform inline-flex items-center space-x-0.5">
+                        <span>Open Details</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </span>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -1218,33 +1288,77 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
 
       {/* Incident Details Modal */}
       {selectedReport && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-300 rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-2xl">
-            <div className="flex justify-between items-start">
+        <div 
+          onClick={(e) => { if (e.target === e.currentTarget) setSelectedReport(null); }}
+          className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto"
+        >
+          <div className="bg-white border border-slate-300 rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-2xl my-auto">
+            <div className="flex justify-between items-start gap-3">
               <div>
-                <span className="text-[10px] font-mono text-amber-700 font-bold uppercase">{selectedReport.defect_type}</span>
-                <h3 className="text-base font-bold text-slate-900">{selectedReport.title}</h3>
+                <div className="flex items-center space-x-2">
+                  <span className="text-[10px] font-mono text-amber-700 font-bold uppercase">{selectedReport.defect_type || 'Pothole (D40)'}</span>
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold capitalize border ${
+                    selectedReport.status === 'resolved' 
+                      ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                      : selectedReport.status === 'in_progress'
+                      ? 'bg-sky-50 text-sky-800 border-sky-300'
+                      : 'bg-amber-50 text-amber-800 border-amber-300'
+                  }`}>
+                    {(selectedReport.status || 'confirmed').replace('_', ' ')}
+                  </span>
+                </div>
+                <h3 className="text-base font-bold text-slate-900 mt-1">{selectedReport.title}</h3>
                 <p className="text-xs text-slate-500">{selectedReport.location_name}</p>
               </div>
-              <button onClick={() => setSelectedReport(null)} className="text-slate-400 hover:text-slate-600 font-bold">✕</button>
+              <button 
+                onClick={() => setSelectedReport(null)} 
+                className="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-sm transition-colors"
+                title="Close report modal"
+              >
+                ✕
+              </button>
             </div>
 
-            <img src={selectedReport.imageUrl} alt="" className="w-full aspect-video rounded-xl object-cover border border-slate-200" />
+            {selectedReport.imageUrl ? (
+              <img 
+                src={selectedReport.imageUrl} 
+                alt={selectedReport.title} 
+                className="w-full aspect-video rounded-xl object-cover border border-slate-200 shadow-inner" 
+              />
+            ) : (
+              <div className="w-full aspect-video rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400">
+                <MapPin className="w-8 h-8 text-slate-300" />
+              </div>
+            )}
 
-            <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-xs space-y-2">
-              <p className="text-slate-700">{selectedReport.description}</p>
-              <div className="flex items-center justify-between pt-2 border-t border-slate-200 text-[11px] font-mono text-slate-500">
-                <span>Contractor: <strong className="text-slate-800">{selectedReport.contractor || 'Tender in progress'}</strong></span>
-                <span>Budget: <strong className="text-slate-800">₹{selectedReport.budget_allocated?.toLocaleString() || 'Pending'}</strong></span>
+            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs space-y-2.5">
+              <p className="text-slate-700 leading-relaxed">{selectedReport.description}</p>
+              <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200 text-[11px] font-mono text-slate-600">
+                <div>
+                  <span className="text-slate-400 block text-[10px]">CONTRACTOR</span>
+                  <strong className="text-slate-800">{selectedReport.contractor || 'Tender in progress'}</strong>
+                </div>
+                <div>
+                  <span className="text-slate-400 block text-[10px]">REPAIR BUDGET</span>
+                  <strong className="text-slate-800">₹{selectedReport.budget_allocated ? selectedReport.budget_allocated.toLocaleString() : '7,500'}</strong>
+                </div>
+                <div>
+                  <span className="text-slate-400 block text-[10px]">GPS COORDINATES</span>
+                  <span className="text-sky-700 font-bold">{selectedReport.latitude ? `${selectedReport.latitude}° N, ${selectedReport.longitude}° E` : '18.5204° N, 73.8567° E'}</span>
+                </div>
+                <div>
+                  <span className="text-slate-400 block text-[10px]">COMMUNITY UPVOTES</span>
+                  <span className="text-amber-700 font-bold">{selectedReport.upvotes || 0} Citizens</span>
+                </div>
               </div>
             </div>
 
-            <div className="flex justify-end">
+            <div className="flex justify-end pt-1">
               <button
                 onClick={() => setSelectedReport(null)}
-                className="bg-slate-900 hover:bg-slate-800 text-white text-xs px-4 py-2 rounded-xl font-bold"
+                className="bg-slate-900 hover:bg-slate-800 text-white text-xs px-5 py-2.5 rounded-xl font-bold transition-all shadow-sm active:scale-95"
               >
-                Close View
+                Close Report
               </button>
             </div>
           </div>

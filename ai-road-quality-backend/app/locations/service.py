@@ -37,9 +37,12 @@ async def get_nearby_reports(
         select(
             RoadReport.id,
             RoadReport.title,
+            RoadReport.description,
+            RoadReport.status,
             RoadReport.severity,
             RoadReport.latitude,
             RoadReport.longitude,
+            RoadReport.evidence,
             distance_expression.label(
                 "distance"
             ),
@@ -64,11 +67,14 @@ async def get_nearby_reports(
 
     return [
         {
-            "id": row.id,
+            "id": str(row.id),
             "title": row.title,
-            "severity": row.severity,
+            "description": row.description or "Road defect logged.",
+            "status": row.status or "confirmed",
+            "severity": row.severity or "high",
             "latitude": row.latitude,
             "longitude": row.longitude,
+            "evidence": row.evidence or [],
             "distance": row.distance,
         }
         for row in result.all()

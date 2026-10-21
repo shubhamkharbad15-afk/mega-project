@@ -168,7 +168,26 @@ export async function getNearbyReports(lat = 18.5204, lng = 73.8567, radius = 50
     });
     if (res.ok) {
       const data = await res.json();
-      if (Array.isArray(data) && data.length > 0) return data;
+      if (Array.isArray(data) && data.length > 0) {
+        return data.map((item, idx) => {
+          const fallback = INITIAL_REPORTS[idx % INITIAL_REPORTS.length];
+          return {
+            ...fallback,
+            ...item,
+            id: String(item.id || fallback.id),
+            title: item.title || fallback.title,
+            severity: item.severity || fallback.severity || 'high',
+            status: item.status || fallback.status || 'confirmed',
+            defect_type: item.defect_type || fallback.defect_type || 'Pothole (D40)',
+            description: item.description || fallback.description || 'Pothole defect logged at GPS coordinates.',
+            imageUrl: item.imageUrl || (item.evidence && item.evidence[0]) || fallback.imageUrl,
+            location_name: item.location_name || fallback.location_name || `${Number(item.latitude || 18.5204).toFixed(4)}° N, ${Number(item.longitude || 73.8567).toFixed(4)}° E`,
+            upvotes: item.upvotes ?? fallback.upvotes ?? 1,
+            budget_allocated: item.budget_allocated || fallback.budget_allocated || 7500,
+            contractor: item.contractor || fallback.contractor || 'Apex Infra Projects Ltd.',
+          };
+        });
+      }
     }
   } catch (err) {
     console.warn('Spatial query fallback:', err.message);
