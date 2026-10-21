@@ -7,7 +7,21 @@ __pycache__/
 .mypy_cache/
 .env
 .env.*
-.venv/
 .DS_Store
 Thumbs.db
 *.log
+
+# Frontend Dependencies & Build Artifacts
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+dist-ssr/
+*.local
+
+# Uploads
+ai-road-quality-backend/app/uploads/*
+!ai-road-quality-backend/app/uploads/.gitkeep
+ai-road-quality-backend/uploads/*
+!ai-road-quality-backend/uploads/.gitkeep
+uploads/
