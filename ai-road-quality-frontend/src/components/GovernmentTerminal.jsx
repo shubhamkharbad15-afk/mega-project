@@ -217,8 +217,8 @@ export default function GovernmentTerminal({ reports, setReports }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {filteredReports.map((rep) => (
-                <tr key={rep.id} className="hover:bg-slate-50/80 transition-colors">
+              {filteredReports.map((rep, idx) => (
+                <tr key={rep.id ? `gov-${rep.id}` : `gov-idx-${idx}`} className="hover:bg-slate-50/80 transition-colors">
                   <td className="py-3 px-3">
                     <div className="flex items-center space-x-2.5">
                       <img src={rep.imageUrl} alt="" className="w-10 h-10 rounded-lg object-cover border border-slate-200" />

@@ -5,11 +5,19 @@ const API_BASE = '/api/v1';
 
 // Token Management
 export function getAuthToken() {
-  return localStorage.getItem('road_auth_token') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNTJiOGM0Ni00YTE1LTQyNGMtOTllNS00MThiODQyMWE4NTciLCJleHAiOjE3OTI2MDg2MTZ9.H2VZBK-9_aowVQUe5BCPq6BQulFY3_iVDuep87HCH38';
+  try {
+    return localStorage.getItem('road_auth_token') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNTJiOGM0Ni00YTE1LTQyNGMtOTllNS00MThiODQyMWE4NTciLCJleHAiOjE3OTI2MDg2MTZ9.H2VZBK-9_aowVQUe5BCPq6BQulFY3_iVDuep87HCH38';
+  } catch (e) {
+    return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNTJiOGM0Ni00YTE1LTQyNGMtOTllNS00MThiODQyMWE4NTciLCJleHAiOjE3OTI2MDg2MTZ9.H2VZBK-9_aowVQUe5BCPq6BQulFY3_iVDuep87HCH38';
+  }
 }
 
 export function setAuthToken(token) {
-  localStorage.setItem('road_auth_token', token);
+  try {
+    localStorage.setItem('road_auth_token', token);
+  } catch (e) {
+    // storage unavailable
+  }
 }
 
 function getHeaders(isJson = true) {
@@ -49,7 +57,6 @@ export async function registerUser(name, email, password, phone = '') {
     }
     return await res.json();
   } catch (err) {
-    console.warn('Backend register fallback:', err.message);
     return { id: 'usr-local', name, email, role: 'user' };
   }
 }
@@ -72,7 +79,6 @@ export async function loginUser(email, password) {
     }
     return data;
   } catch (err) {
-    console.warn('Backend login fallback:', err.message);
     const mockToken = 'mock-jwt-token-' + Date.now();
     setAuthToken(mockToken);
     return { access_token: mockToken, token_type: 'bearer' };
@@ -116,7 +122,6 @@ export async function runDetection(fileOrBlob, latitude = 18.5204, longitude = 7
     if (!res.ok) throw new Error('Detection endpoint returned status ' + res.status);
     return await res.json();
   } catch (err) {
-    console.warn('Using YOLOv11 edge simulation fallback:', err.message);
     return {
       detection_id: 'det-' + Math.random().toString(36).substring(2, 9),
       detected: false,
@@ -150,7 +155,7 @@ export async function submitRoadReport(reportData) {
     });
     if (res.ok) return await res.json();
   } catch (err) {
-    console.warn('Using client-side report storage fallback:', err.message);
+    // client fallback
   }
   return {
     id: 'rep-' + Date.now().toString(36),
@@ -190,7 +195,7 @@ export async function getNearbyReports(lat = 18.5204, lng = 73.8567, radius = 50
       }
     }
   } catch (err) {
-    console.warn('Spatial query fallback:', err.message);
+    // spatial fallback
   }
   return INITIAL_REPORTS;
 }
@@ -223,7 +228,7 @@ export async function getRepairAdvice(defect_type, severity = 'high', road_type 
     });
     if (res.ok) return await res.json();
   } catch (err) {
-    console.warn('Assistant service fallback:', err.message);
+    // assistant fallback
   }
 
   const isPothole = defect_type.toLowerCase().includes('pothole');

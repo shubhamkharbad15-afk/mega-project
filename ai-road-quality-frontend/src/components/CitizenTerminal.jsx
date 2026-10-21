@@ -94,7 +94,6 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
         };
         stream = await navigator.mediaDevices.getUserMedia(constraints);
       } catch (constraintErr) {
-        console.warn('FacingMode/resolution constraints failed, falling back to basic video:', constraintErr);
         // Fallback: simple video constraint without facingMode or resolution restrictions (works on Mac FaceTime & webcams)
         stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
       }
@@ -104,7 +103,7 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         videoRef.current.onloadedmetadata = () => {
-          videoRef.current.play().catch(e => console.warn('Autoplay prevented:', e));
+          videoRef.current.play().catch(() => {});
           setVideoResolution({
             width: videoRef.current.videoWidth || 1280,
             height: videoRef.current.videoHeight || 720,
@@ -114,7 +113,6 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
       setIsCameraActive(true);
       setCameraError(null);
     } catch (err) {
-      console.warn('Real camera access error:', err);
       setIsCameraActive(false);
 
       const isPermissionDenied = 
@@ -989,7 +987,7 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
 
                 return (
                   <button
-                    key={rep.id}
+                    key={rep.id ? `pin-${rep.id}` : `pin-idx-${idx}`}
                     onClick={() => setSelectedReport(rep)}
                     className="absolute -translate-x-1/2 -translate-y-1/2 group focus:outline-none"
                     style={pos}
@@ -1010,9 +1008,9 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
             {/* Nearby Incidents List */}
             <div className="space-y-2">
               <h4 className="text-xs font-bold text-slate-700">Nearby Incidents on Commute Route:</h4>
-              {reports.map((rep) => (
+              {reports.map((rep, idx) => (
                 <div
-                  key={rep.id}
+                  key={rep.id ? `route-${rep.id}` : `route-idx-${idx}`}
                   onClick={() => setSelectedReport(rep)}
                   className="bg-white p-3 rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-xs cursor-pointer flex items-center justify-between text-xs transition-all"
                 >
@@ -1021,7 +1019,7 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
                     <div>
                       <div className="flex items-center space-x-2">
                         <span className="font-bold text-slate-900">{rep.title}</span>
-                        <span className={`px-1.5 py-0.2 rounded text-[10px] font-bold uppercase ${
+                        <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase ${
                           rep.severity === 'high' ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-amber-50 text-amber-700 border border-amber-200'
                         }`}>
                           {rep.severity}

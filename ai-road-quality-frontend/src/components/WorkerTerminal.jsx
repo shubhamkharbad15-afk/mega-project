@@ -116,9 +116,9 @@ export default function WorkerTerminal({ reports, setReports }) {
             </div>
 
             <div className="space-y-2">
-              {reports.map((job) => (
+              {reports.map((job, idx) => (
                 <button
-                  key={job.id}
+                  key={job.id ? `job-${job.id}` : `job-idx-${idx}`}
                   onClick={() => setSelectedTicketId(job.id)}
                   className={`w-full p-3 rounded-xl border text-left text-xs transition-all space-y-1 ${
                     selectedTicket.id === job.id
@@ -128,11 +128,11 @@ export default function WorkerTerminal({ reports, setReports }) {
                 >
                   <div className="flex items-center justify-between">
                     <span className="font-mono text-[10px] text-sky-700 font-bold">ID: {job.id}</span>
-                    <span className={`px-1.5 py-0.2 rounded text-[9px] uppercase font-extrabold ${
+                    <span className={`px-1.5 py-0.5 rounded text-[9px] uppercase font-extrabold ${
                       job.status === 'resolved' ? 'bg-emerald-100 text-emerald-800' :
                       job.severity === 'high' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-800'
                     }`}>
-                      {job.status}
+                      {(job.status || 'confirmed').replace('_', ' ')}
                     </span>
                   </div>
                   <p className="font-bold text-slate-900 truncate">{job.title}</p>
