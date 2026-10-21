@@ -22,7 +22,8 @@ import {
   Sliders,
   Check,
   Smartphone,
-  Info
+  Info,
+  RefreshCw
 } from 'lucide-react';
 import { runDetection, submitRoadReport, getRepairAdvice } from '../api';
 
@@ -186,7 +187,10 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
 
         for (let py = 0; py < cellH; py += 4) {
           for (let px = 0; px < cellW; px += 4) {
-            const idx = ((r * cellH + py) * width + (c * cellW + px)) * 4;
+            const curY = r * cellH + py;
+            const curX = c * cellW + px;
+            if (curY >= inspectH || curX >= width) continue;
+            const idx = (curY * width + curX) * 4;
             const lum = 0.299 * data[idx] + 0.587 * data[idx + 1] + 0.114 * data[idx + 2];
             // Exclude saturated white paint road markings (> 215)
             if (lum < 215) {
@@ -289,25 +293,23 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
     stopCamera();
     const img = new Image();
     img.onload = () => {
-      if (canvasRef.current) {
-        const canvas = canvasRef.current;
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0);
+      const canvas = canvasRef.current || document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
 
-        const analysis = analyzeRoadFrame(ctx, img.width, img.height);
-        setRoadRoughness(analysis.roughness);
-        setDetections(analysis.detections);
-        drawBoundingBoxes(analysis.detections, img.width, img.height);
+      const analysis = analyzeRoadFrame(ctx, img.width, img.height);
+      setRoadRoughness(analysis.roughness);
+      setDetections(analysis.detections);
+      drawBoundingBoxes(analysis.detections, img.width, img.height);
 
-        if (analysis.detections.length > 0) {
-          triggerReviewModal(analysis.detections[0], imageSrc);
-        } else {
-          setReviewModalData(null);
-          setNotificationToast('✓ Surface Analysis: Road is in Sound Condition. Zero potholes detected (0% risk).');
-          setTimeout(() => setNotificationToast(null), 5000);
-        }
+      if (analysis.detections.length > 0) {
+        triggerReviewModal(analysis.detections[0], imageSrc);
+      } else {
+        setReviewModalData(null);
+        setNotificationToast('✓ Surface Analysis: Road is in Sound Condition. Zero potholes detected (0% risk).');
+        setTimeout(() => setNotificationToast(null), 5000);
       }
     };
     img.src = imageSrc;
@@ -369,19 +371,26 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
     const ctx = overlay.getContext('2d');
     ctx.clearRect(0, 0, width, height);
 
+    const scale = Math.max(1, width / 640);
+
     if (items.length === 0) {
       ctx.fillStyle = 'rgba(255, 255, 255, 0.94)';
-      ctx.font = 'bold 13px Inter, sans-serif';
+      ctx.font = `bold ${Math.round(13 * scale)}px Inter, sans-serif`;
       const label = '✓ ROAD SOUND — NO DEFECT DETECTED';
       const w = ctx.measureText(label).width;
       
-      ctx.fillRect(width / 2 - w / 2 - 12, height - 46, w + 24, 30);
+      const boxW = w + Math.round(24 * scale);
+      const boxH = Math.round(32 * scale);
+      const boxX = (width - boxW) / 2;
+      const boxY = height - Math.round(48 * scale);
+
+      ctx.fillRect(boxX, boxY, boxW, boxH);
       ctx.strokeStyle = '#10B981';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(width / 2 - w / 2 - 12, height - 46, w + 24, 30);
+      ctx.lineWidth = Math.round(2 * scale);
+      ctx.strokeRect(boxX, boxY, boxW, boxH);
 
       ctx.fillStyle = '#065F46';
-      ctx.fillText(label, width / 2 - w / 2, height - 26);
+      ctx.fillText(label, boxX + Math.round(12 * scale), boxY + Math.round(21 * scale));
       return;
     }
 
@@ -397,21 +406,23 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
       const boxW = x2 - x1;
       const boxH = y2 - y1;
 
-      ctx.lineWidth = 4;
+      ctx.lineWidth = Math.max(3, Math.round(4 * scale));
       ctx.strokeStyle = '#DC2626';
       ctx.fillStyle = 'rgba(220, 38, 38, 0.25)';
       ctx.fillRect(x1, y1, boxW, boxH);
       ctx.strokeRect(x1, y1, boxW, boxH);
 
       const labelText = `${item.label.toUpperCase()} ${Math.round(item.confidence * 100)}%`;
-      ctx.font = 'bold 14px JetBrains Mono, monospace';
+      ctx.font = `bold ${Math.round(14 * scale)}px JetBrains Mono, monospace`;
       const textWidth = ctx.measureText(labelText).width;
+      const badgeH = Math.round(26 * scale);
+      const badgeY = Math.max(0, y1 - badgeH);
 
       ctx.fillStyle = '#DC2626';
-      ctx.fillRect(x1, y1 - 26, textWidth + 14, 26);
+      ctx.fillRect(x1, badgeY, textWidth + Math.round(14 * scale), badgeH);
 
       ctx.fillStyle = '#FFFFFF';
-      ctx.fillText(labelText, x1 + 7, y1 - 8);
+      ctx.fillText(labelText, x1 + Math.round(7 * scale), badgeY + Math.round(18 * scale));
     });
   };
 
@@ -741,6 +752,7 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
               accept="image/*"
               capture="environment"
               className="hidden"
+              onClick={(e) => { e.target.value = null; }}
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (file) {
@@ -838,6 +850,7 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
                       type="file"
                       accept="image/*"
                       className="hidden"
+                      onClick={(e) => { e.target.value = null; }}
                       onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (file) {

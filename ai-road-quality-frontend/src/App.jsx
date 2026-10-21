@@ -4,6 +4,7 @@ import CitizenTerminal from './components/CitizenTerminal';
 import GovernmentTerminal from './components/GovernmentTerminal';
 import WorkerTerminal from './components/WorkerTerminal';
 import AdminTerminal from './components/AdminTerminal';
+import ErrorBoundary from './components/ErrorBoundary';
 import { INITIAL_REPORTS, checkBackendHealth, getNearbyReports } from './api';
 import { ShieldAlert, Menu, X } from 'lucide-react';
 
@@ -100,31 +101,33 @@ export default function App() {
 
         {/* Dynamic Terminal View */}
         <main className="flex-1 p-3 sm:p-6 lg:p-8 pb-28 sm:pb-8">
-          {activeTerminal === 'citizen' && (
-            <CitizenTerminal 
-              reports={reports} 
-              setReports={setReports} 
-              isMobileFrame={isMobileFrame} 
-            />
-          )}
+          <ErrorBoundary>
+            {activeTerminal === 'citizen' && (
+              <CitizenTerminal 
+                reports={reports} 
+                setReports={setReports} 
+                isMobileFrame={isMobileFrame} 
+              />
+            )}
 
-          {activeTerminal === 'government' && (
-            <GovernmentTerminal 
-              reports={reports} 
-              setReports={setReports} 
-            />
-          )}
+            {activeTerminal === 'government' && (
+              <GovernmentTerminal 
+                reports={reports} 
+                setReports={setReports} 
+              />
+            )}
 
-          {activeTerminal === 'worker' && (
-            <WorkerTerminal 
-              reports={reports} 
-              setReports={setReports} 
-            />
-          )}
+            {activeTerminal === 'worker' && (
+              <WorkerTerminal 
+                reports={reports} 
+                setReports={setReports} 
+              />
+            )}
 
-          {activeTerminal === 'admin' && (
-            <AdminTerminal />
-          )}
+            {activeTerminal === 'admin' && (
+              <AdminTerminal />
+            )}
+          </ErrorBoundary>
         </main>
 
         {/* Academic Presentation Footer */}

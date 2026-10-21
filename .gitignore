@@ -17,6 +17,8 @@ node_modules/
 dist/
 **/dist/
 dist-ssr/
+.vite/
+**/.vite/
 *.local
 
 # Uploads
