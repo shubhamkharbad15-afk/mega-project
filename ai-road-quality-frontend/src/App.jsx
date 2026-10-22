@@ -121,7 +121,7 @@ export default function App() {
         </header>
 
         {/* Dynamic Terminal View */}
-        <main className="flex-1 p-3 sm:p-6 lg:p-8 pb-28 sm:pb-8">
+        <main className="p-3 sm:p-6 lg:p-8 pb-3 sm:pb-6">
           <ErrorBoundary>
             {activeTerminal === 'citizen' && (
               <CitizenTerminal 
@@ -152,7 +152,7 @@ export default function App() {
         </main>
 
         {/* Academic Presentation Footer */}
-        <footer className="border-t border-slate-200 bg-white py-5 text-center text-xs text-slate-500 mt-auto">
+        <footer className="border-t border-slate-200 bg-white py-4 sm:py-5 text-center text-xs text-slate-500 mt-2 sm:mt-6">
           <div className="max-w-5xl mx-auto px-4 space-y-1">
             <p className="font-bold text-slate-700">
               AI Road Quality Management System • Final Year Mega Project

@@ -694,7 +694,7 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
   }, [activeTab]);
 
   return (
-    <div className={`mx-auto transition-all pb-28 sm:pb-8 ${isMobileFrame ? 'max-w-md py-2' : 'max-w-5xl'}`}>
+    <div className={`mx-auto transition-all pb-2 sm:pb-6 ${isMobileFrame ? 'max-w-md py-2' : 'max-w-5xl'}`}>
       
       {/* Toast Alert */}
       {notificationToast && (
@@ -810,7 +810,7 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
 
         {/* Tab 1: Live Hardware Camera with Intelligent Pothole vs. Good Road Analysis */}
         {activeTab === 'camera' && (
-          <div className="p-4 sm:p-5 space-y-4 flex-1">
+          <div className="p-4 sm:p-5 space-y-4">
 
             {/* Active Feed Source Indicator (Only when camera or upload is active) */}
             {(isCameraActive || customUpload) && (
