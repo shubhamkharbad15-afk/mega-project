@@ -312,10 +312,10 @@ export const INITIAL_REPORTS = [
     upvotes: 42,
     budget_allocated: 7500,
     contractor: 'Apex Infra Projects Ltd.',
-    imageUrl: '/images/pothole-deep-cavity.jpg',
+    imageUrl: '/new_images/images-2.jpeg',
     milestones: {
-      before: '/images/pothole-deep-cavity.jpg',
-      in_progress: '/images/repair-in-progress.jpg',
+      before: '/new_images/images-2.jpeg',
+      in_progress: '/new_images/repair-in-progress.jpg',
       resolved: null
     }
   },
@@ -336,10 +336,10 @@ export const INITIAL_REPORTS = [
     upvotes: 28,
     budget_allocated: 14200,
     contractor: 'Metro Roadworks Corp.',
-    imageUrl: '/images/alligator-cracking.jpg',
+    imageUrl: '/new_images/images-7.jpeg',
     milestones: {
-      before: '/images/alligator-cracking.jpg',
-      in_progress: '/images/repair-in-progress.jpg',
+      before: '/new_images/images-7.jpeg',
+      in_progress: '/new_images/repair-in-progress.jpg',
       resolved: null
     }
   },
@@ -360,11 +360,11 @@ export const INITIAL_REPORTS = [
     upvotes: 19,
     budget_allocated: 4800,
     contractor: 'GreenPave Highway Solutions',
-    imageUrl: '/images/transverse-joint-fracture.jpg',
+    imageUrl: '/new_images/images-3.jpeg',
     milestones: {
-      before: '/images/transverse-joint-fracture.jpg',
-      in_progress: '/images/repair-in-progress.jpg',
-      resolved: '/images/repair-resolved.jpg'
+      before: '/new_images/images-3.jpeg',
+      in_progress: '/new_images/repair-in-progress.jpg',
+      resolved: '/new_images/repair-resolved.jpg'
     }
   },
   {
@@ -384,9 +384,9 @@ export const INITIAL_REPORTS = [
     upvotes: 64,
     budget_allocated: 9200,
     contractor: 'Pending Assignment',
-    imageUrl: '/images/waterlogged-pothole.jpg',
+    imageUrl: '/new_images/images-10.jpeg',
     milestones: {
-      before: '/images/waterlogged-pothole.jpg',
+      before: '/new_images/images-10.jpeg',
       in_progress: null,
       resolved: null
     }
@@ -408,9 +408,9 @@ export const INITIAL_REPORTS = [
     upvotes: 51,
     budget_allocated: 11500,
     contractor: 'Apex Infra Projects Ltd.',
-    imageUrl: '/images/trench-subsidence.jpg',
+    imageUrl: '/new_images/images-5.jpeg',
     milestones: {
-      before: '/images/trench-subsidence.jpg',
+      before: '/new_images/images-5.jpeg',
       in_progress: null,
       resolved: null
     }
@@ -432,9 +432,9 @@ export const INITIAL_REPORTS = [
     upvotes: 39,
     budget_allocated: 8800,
     contractor: 'Metro Roadworks Corp.',
-    imageUrl: '/images/crater-pier-transition.jpg',
+    imageUrl: '/new_images/images-4.jpeg',
     milestones: {
-      before: '/images/crater-pier-transition.jpg',
+      before: '/new_images/images-4.jpeg',
       in_progress: null,
       resolved: null
     }
@@ -456,10 +456,10 @@ export const INITIAL_REPORTS = [
     upvotes: 22,
     budget_allocated: 6400,
     contractor: 'GreenPave Highway Solutions',
-    imageUrl: '/images/rutting-longitudinal.jpg',
+    imageUrl: '/new_images/images-6.jpeg',
     milestones: {
-      before: '/images/rutting-longitudinal.jpg',
-      in_progress: '/images/repair-in-progress.jpg',
+      before: '/new_images/images-6.jpeg',
+      in_progress: '/new_images/repair-in-progress.jpg',
       resolved: null
     }
   },
@@ -480,9 +480,9 @@ export const INITIAL_REPORTS = [
     upvotes: 31,
     budget_allocated: 7900,
     contractor: 'Apex Infra Projects Ltd.',
-    imageUrl: '/images/edge-spalling.jpg',
+    imageUrl: '/new_images/images-8.jpeg',
     milestones: {
-      before: '/images/edge-spalling.jpg',
+      before: '/new_images/images-8.jpeg',
       in_progress: null,
       resolved: null
     }
@@ -504,10 +504,10 @@ export const INITIAL_REPORTS = [
     upvotes: 27,
     budget_allocated: 8300,
     contractor: 'Metro Roadworks Corp.',
-    imageUrl: '/images/block-cracking.jpg',
+    imageUrl: '/new_images/images-11.jpeg',
     milestones: {
-      before: '/images/block-cracking.jpg',
-      in_progress: '/images/repair-in-progress.jpg',
+      before: '/new_images/images-11.jpeg',
+      in_progress: '/new_images/repair-in-progress.jpg',
       resolved: null
     }
   },
@@ -528,9 +528,9 @@ export const INITIAL_REPORTS = [
     upvotes: 18,
     budget_allocated: 5200,
     contractor: 'Pending Assignment',
-    imageUrl: '/images/patch-corrugation.jpg',
+    imageUrl: '/new_images/images-9.jpeg',
     milestones: {
-      before: '/images/patch-corrugation.jpg',
+      before: '/new_images/images-9.jpeg',
       in_progress: null,
       resolved: null
     }

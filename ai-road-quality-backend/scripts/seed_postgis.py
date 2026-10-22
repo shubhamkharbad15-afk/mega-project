@@ -20,7 +20,7 @@ PUNE_REPORTS = [
         "severity": "high",
         "latitude": 18.5204,
         "longitude": 73.8567,
-        "evidence": ["/images/pothole-deep-cavity.jpg"],
+        "evidence": ["/new_images/images-2.jpeg"],
     },
     {
         "id": uuid.UUID("22222222-2222-4222-8222-222222222222"),
@@ -30,7 +30,7 @@ PUNE_REPORTS = [
         "severity": "medium",
         "latitude": 18.5314,
         "longitude": 73.8446,
-        "evidence": ["/images/alligator-cracking.jpg"],
+        "evidence": ["/new_images/images-7.jpeg"],
     },
     {
         "id": uuid.UUID("33333333-3333-4333-8333-333333333333"),
@@ -40,7 +40,7 @@ PUNE_REPORTS = [
         "severity": "low",
         "latitude": 18.5089,
         "longitude": 73.8078,
-        "evidence": ["/images/transverse-joint-fracture.jpg"],
+        "evidence": ["/new_images/images-3.jpeg"],
     },
     {
         "id": uuid.UUID("44444444-4444-4444-8444-444444444444"),
@@ -50,7 +50,7 @@ PUNE_REPORTS = [
         "severity": "high",
         "latitude": 18.5913,
         "longitude": 73.7389,
-        "evidence": ["/images/waterlogged-pothole.jpg"],
+        "evidence": ["/new_images/images-10.jpeg"],
     },
     {
         "id": uuid.UUID("55555555-5555-4555-8555-555555555555"),
@@ -60,7 +60,7 @@ PUNE_REPORTS = [
         "severity": "high",
         "latitude": 18.5065,
         "longitude": 73.8322,
-        "evidence": ["/images/trench-subsidence.jpg"],
+        "evidence": ["/new_images/images-5.jpeg"],
     },
     {
         "id": uuid.UUID("66666666-6666-4666-8666-666666666666"),
@@ -70,7 +70,7 @@ PUNE_REPORTS = [
         "severity": "high",
         "latitude": 18.5604,
         "longitude": 73.9168,
-        "evidence": ["/images/crater-pier-transition.jpg"],
+        "evidence": ["/new_images/images-4.jpeg"],
     },
     {
         "id": uuid.UUID("77777777-7777-4777-8777-777777777777"),
@@ -80,7 +80,7 @@ PUNE_REPORTS = [
         "severity": "medium",
         "latitude": 18.5638,
         "longitude": 73.8077,
-        "evidence": ["/images/rutting-longitudinal.jpg"],
+        "evidence": ["/new_images/images-6.jpeg"],
     },
     {
         "id": uuid.UUID("88888888-8888-4888-8888-888888888888"),
@@ -90,7 +90,7 @@ PUNE_REPORTS = [
         "severity": "medium",
         "latitude": 18.4912,
         "longitude": 73.8291,
-        "evidence": ["/images/edge-spalling.jpg"],
+        "evidence": ["/new_images/images-8.jpeg"],
     },
     {
         "id": uuid.UUID("99999999-9999-4999-8999-999999999999"),
@@ -100,7 +100,7 @@ PUNE_REPORTS = [
         "severity": "medium",
         "latitude": 18.5398,
         "longitude": 73.8297,
-        "evidence": ["/images/block-cracking.jpg"],
+        "evidence": ["/new_images/images-11.jpeg"],
     },
     {
         "id": uuid.UUID("aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"),
@@ -110,7 +110,7 @@ PUNE_REPORTS = [
         "severity": "medium",
         "latitude": 18.5144,
         "longitude": 73.9272,
-        "evidence": ["/images/patch-corrugation.jpg"],
+        "evidence": ["/new_images/images-9.jpeg"],
     },
 ]
 
