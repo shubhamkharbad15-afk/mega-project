@@ -57,25 +57,15 @@ def to_response(
 ) -> ReportResponse:
 
     return ReportResponse(
-
         id=report.id,
-
         title=report.title,
-
         description=report.description,
-
-        status=ReportStatus(
-            report.status
-        ),
-
+        status=ReportStatus(report.status),
         severity=report.severity,
-
         latitude=report.latitude,
-
         longitude=report.longitude,
-
         detection_id=report.detection_id,
-
+        evidence=report.evidence or [],
         created_at=report.created_at,
     )
 
@@ -108,23 +98,15 @@ async def get_report(
 
 async def list_reports(
     session: AsyncSession,
-    citizen_id: uuid.UUID,
+    citizen_id: uuid.UUID | None = None,
 ) -> list[ReportResponse]:
 
-    result = await session.execute(
+    query = select(RoadReport)
+    if citizen_id is not None:
+        query = query.where(RoadReport.citizen_id == citizen_id)
+    query = query.order_by(RoadReport.created_at.desc())
 
-        select(RoadReport)
-
-        .where(
-            RoadReport.citizen_id
-            == citizen_id
-        )
-
-        .order_by(
-            RoadReport.created_at.desc()
-        )
-    )
-
+    result = await session.execute(query)
     reports = result.scalars().all()
 
     return [

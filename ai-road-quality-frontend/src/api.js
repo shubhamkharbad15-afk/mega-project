@@ -6,15 +6,23 @@ const API_BASE = '/api/v1';
 // Token Management
 export function getAuthToken() {
   try {
-    return localStorage.getItem('road_auth_token') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNTJiOGM0Ni00YTE1LTQyNGMtOTllNS00MThiODQyMWE4NTciLCJleHAiOjE3OTI2MDg2MTZ9.H2VZBK-9_aowVQUe5BCPq6BQulFY3_iVDuep87HCH38';
+    const token = localStorage.getItem('road_auth_token');
+    if (!token || token.startsWith('mock-jwt-token') || token.length < 20) {
+      return null;
+    }
+    return token;
   } catch (e) {
-    return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNTJiOGM0Ni00YTE1LTQyNGMtOTllNS00MThiODQyMWE4NTciLCJleHAiOjE3OTI2MDg2MTZ9.H2VZBK-9_aowVQUe5BCPq6BQulFY3_iVDuep87HCH38';
+    return null;
   }
 }
 
 export function setAuthToken(token) {
   try {
-    localStorage.setItem('road_auth_token', token);
+    if (token) {
+      localStorage.setItem('road_auth_token', token);
+    } else {
+      localStorage.removeItem('road_auth_token');
+    }
   } catch (e) {
     // storage unavailable
   }
@@ -111,12 +119,16 @@ export async function runDetection(fileOrBlob, latitude = 18.5204, longitude = 7
   formData.append('latitude', latitude.toString());
   formData.append('longitude', longitude.toString());
 
+  const headers = {};
+  const token = getAuthToken();
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
   try {
     const res = await fetch(`${API_BASE}/detections/`, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${getAuthToken()}`
-      },
+      headers,
       body: formData,
     });
     if (!res.ok) throw new Error('Detection endpoint returned status ' + res.status);

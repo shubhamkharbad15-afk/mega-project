@@ -25,6 +25,7 @@ from app.core.database import Base
 
 class ReportStatus(str, enum.Enum):
     CONFIRMED = "confirmed"
+    IN_PROGRESS = "in_progress"
     REVIEWED = "reviewed"
     RESOLVED = "resolved"
 

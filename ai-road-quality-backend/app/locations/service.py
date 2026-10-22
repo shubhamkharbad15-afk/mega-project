@@ -12,7 +12,7 @@ async def get_nearby_reports(
     latitude: float,
     longitude: float,
     radius: int,
-    citizen_id,
+    citizen_id=None,
 ):
 
     point = WKTElement(
@@ -33,35 +33,28 @@ async def get_nearby_reports(
         query_geography,
     )
 
-    query = (
-        select(
-            RoadReport.id,
-            RoadReport.title,
-            RoadReport.description,
-            RoadReport.status,
-            RoadReport.severity,
-            RoadReport.latitude,
-            RoadReport.longitude,
-            RoadReport.evidence,
-            distance_expression.label(
-                "distance"
-            ),
-        )
-        .where(
-            RoadReport.citizen_id
-            == citizen_id
-        )
-        .where(
-            func.ST_DWithin(
-                report_geography,
-                query_geography,
-                radius,
-            )
-        )
-        .order_by(
-            distance_expression
-        )
+    query = select(
+        RoadReport.id,
+        RoadReport.title,
+        RoadReport.description,
+        RoadReport.status,
+        RoadReport.severity,
+        RoadReport.latitude,
+        RoadReport.longitude,
+        RoadReport.evidence,
+        distance_expression.label("distance"),
     )
+
+    if citizen_id is not None:
+        query = query.where(RoadReport.citizen_id == citizen_id)
+
+    query = query.where(
+        func.ST_DWithin(
+            report_geography,
+            query_geography,
+            radius,
+        )
+    ).order_by(distance_expression)
 
     result = await session.execute(query)
 

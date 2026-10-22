@@ -6,25 +6,20 @@ from app.reports.models import RoadReport
 
 async def get_summary(
     session: AsyncSession,
-    citizen_id,
+    citizen_id=None,
 ):
 
-    result = await session.execute(
-
-        select(
-            RoadReport.severity,
-            func.count(RoadReport.id),
-        )
-
-        .where(
-            RoadReport.citizen_id
-            == citizen_id
-        )
-
-        .group_by(
-            RoadReport.severity
-        )
+    query = select(
+        RoadReport.severity,
+        func.count(RoadReport.id),
     )
+
+    if citizen_id is not None:
+        query = query.where(RoadReport.citizen_id == citizen_id)
+
+    query = query.group_by(RoadReport.severity)
+
+    result = await session.execute(query)
 
     counts = {
         severity: count

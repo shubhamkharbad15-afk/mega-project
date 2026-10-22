@@ -14,6 +14,13 @@ oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/api/v1/auth/login"
 )
 
+oauth2_scheme_optional = OAuth2PasswordBearer(
+    tokenUrl="/api/v1/auth/login",
+    auto_error=False,
+)
+
+DEFAULT_SYSTEM_USER_ID = uuid.UUID("352b8c46-4a15-424c-99e5-418b8421a857")
+
 
 async def get_current_user(
     token: str = Depends(oauth2_scheme),
@@ -55,3 +62,55 @@ async def get_current_user(
         )
 
     return user
+
+
+async def get_current_user_optional(
+    token: str | None = Depends(oauth2_scheme_optional),
+    db: AsyncSession = Depends(get_db),
+) -> User | None:
+    if not token:
+        return None
+
+    user_id = decode_access_token(token)
+    if not user_id:
+        return None
+
+    try:
+        parsed_id = uuid.UUID(user_id)
+    except ValueError:
+        return None
+
+    user = await get_user_by_id(
+        db,
+        parsed_id,
+    )
+
+    if not user or not user.is_active:
+        return None
+
+    return user
+
+
+async def get_current_user_or_default(
+    current_user: User | None = Depends(get_current_user_optional),
+    db: AsyncSession = Depends(get_db),
+) -> User:
+    if current_user:
+        return current_user
+
+    user = await get_user_by_id(db, DEFAULT_SYSTEM_USER_ID)
+    if user and user.is_active:
+        return user
+
+    from sqlalchemy import select
+    result = await db.execute(
+        select(User).where(User.is_active.is_(True)).limit(1)
+    )
+    fallback_user = result.scalar_one_or_none()
+    if fallback_user:
+        return fallback_user
+
+    raise HTTPException(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        detail="No active user found for system attribution",
+    )

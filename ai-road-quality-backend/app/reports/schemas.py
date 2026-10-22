@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field
 
 class ReportStatus(str, Enum):
     CONFIRMED = "confirmed"
+    IN_PROGRESS = "in_progress"
     REVIEWED = "reviewed"
     RESOLVED = "resolved"
 
@@ -34,7 +35,7 @@ class ReportCreate(BaseModel):
 
     severity: str = "medium"
 
-    evidence: list[dict] = Field(
+    evidence: list = Field(
         default_factory=list
     )
 
@@ -52,6 +53,7 @@ class ReportResponse(BaseModel):
     latitude: float
     longitude: float
 
-    detection_id: uuid.UUID | None
+    detection_id: uuid.UUID | None = None
+    evidence: list = Field(default_factory=list)
 
     created_at: datetime | None
