@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Download, Share2, PlusSquare, X, CheckCircle2, Smartphone, Monitor, Sparkles } from 'lucide-react';
+import { usePwaInstall } from '../hooks/usePwaInstall';
 
 export default function InstallPwaBanner() {
+  const isInstalled = usePwaInstall();
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isStandalone, setIsStandalone] = useState(false);
   const [isIos, setIsIos] = useState(false);
@@ -103,8 +105,8 @@ export default function InstallPwaBanner() {
     sessionStorage.setItem('pwa_banner_dismissed', 'true');
   };
 
-  // If already running standalone, do not render installation promos
-  if (isStandalone) return null;
+  // If already running standalone or installed, do not render installation promos
+  if (isStandalone || isInstalled) return null;
 
   return (
     <>

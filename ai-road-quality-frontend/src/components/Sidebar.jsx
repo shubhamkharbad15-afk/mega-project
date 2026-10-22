@@ -16,6 +16,7 @@ import {
   X
 } from 'lucide-react';
 import { checkBackendHealth } from '../api';
+import { usePwaInstall } from '../hooks/usePwaInstall';
 
 export default function Sidebar({ 
   activeTerminal, 
@@ -26,6 +27,7 @@ export default function Sidebar({
   isMobileFrame, 
   setIsMobileFrame 
 }) {
+  const isPwaInstalled = usePwaInstall();
   const terminals = [
     { 
       id: 'citizen', 
@@ -146,20 +148,22 @@ export default function Sidebar({
           </div>
         )}
 
-        {/* PWA App Installation Button */}
-        <button
-          onClick={() => {
-            if (window.__triggerPwaInstall) {
-              window.__triggerPwaInstall();
-            } else {
-              window.dispatchEvent(new CustomEvent('open-pwa-install-guide'));
-            }
-          }}
-          className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-semibold py-2.5 px-3 rounded-xl shadow-xs transition-all active:scale-98 cursor-pointer"
-        >
-          <Download className="w-4 h-4 text-white" />
-          <span>Install Web App</span>
-        </button>
+        {/* PWA App Installation Button (Hidden once installed/standalone) */}
+        {!isPwaInstalled && (
+          <button
+            onClick={() => {
+              if (window.__triggerPwaInstall) {
+                window.__triggerPwaInstall();
+              } else {
+                window.dispatchEvent(new CustomEvent('open-pwa-install-guide'));
+              }
+            }}
+            className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-semibold py-2.5 px-3 rounded-xl shadow-xs transition-all active:scale-98 cursor-pointer"
+          >
+            <Download className="w-4 h-4 text-white" />
+            <span>Install Web App</span>
+          </button>
+        )}
 
         {/* Live FastAPI Backend Telemetry Card */}
         <div className="bg-slate-50 rounded-xl p-3.5 border border-slate-200 space-y-2 text-xs">
