@@ -258,7 +258,7 @@ export default function GovernmentTerminal({ reports, setReports }) {
                         className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs shadow-xs transition-all flex items-center space-x-1 ml-auto"
                       >
                         <CheckCircle className="w-3.5 h-3.5" />
-                        <span>Approve Work Order</span>
+                        <span>Approve</span>
                       </button>
                     ) : (
                       <span className="text-[11px] text-slate-500 font-mono font-medium">

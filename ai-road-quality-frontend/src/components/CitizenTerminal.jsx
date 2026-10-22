@@ -1136,7 +1136,7 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-bold text-slate-900">PostGIS Spatial Incident Registry</h3>
-                <p className="text-xs text-slate-500">Query radius: 5.0 km (Pune Urban Corridor)</p>
+                <p className="text-xs text-slate-500">Query radius: 25.0 km (Pune Metropolitan Corridor)</p>
               </div>
               <span className="text-xs font-mono bg-sky-50 text-sky-800 px-2.5 py-1 rounded-full border border-sky-200 font-bold">
                 {reports.length} Incidents Found

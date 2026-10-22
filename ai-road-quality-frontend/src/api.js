@@ -178,7 +178,7 @@ export async function submitRoadReport(reportData) {
 }
 
 // 7. PostGIS Nearby Spatial Query (GET /api/v1/locations/nearby)
-export async function getNearbyReports(lat = 18.5204, lng = 73.8567, radius = 5000) {
+export async function getNearbyReports(lat = 18.5204, lng = 73.8567, radius = 25000) {
   try {
     const res = await fetch(`${API_BASE}/locations/nearby?latitude=${lat}&longitude=${lng}&radius=${radius}`, {
       headers: getHeaders(false),
@@ -387,6 +387,150 @@ export const INITIAL_REPORTS = [
     imageUrl: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80',
     milestones: {
       before: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80',
+      in_progress: null,
+      resolved: null
+    }
+  },
+  {
+    id: 'rep-105',
+    title: 'Severe Trench Subsidence & Manhole Dip',
+    description: '18cm deep road cut depression across two lanes. High risk of toppling for two-wheelers and severe axle impact.',
+    defect_type: 'Subsidence / Trench (D40)',
+    severity: 'high',
+    risk_score: 0.96,
+    status: 'confirmed',
+    latitude: 18.5065,
+    longitude: 73.8322,
+    location_name: 'Karve Road, Near Nal Stop Flyover',
+    zone: 'Ward 8 - Kothrud South',
+    created_at: '2026-10-21T18:30:00Z',
+    citizen_name: 'Pooja R.',
+    upvotes: 51,
+    budget_allocated: 11500,
+    contractor: 'Apex Infra Projects Ltd.',
+    imageUrl: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80',
+    milestones: {
+      before: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80',
+      in_progress: null,
+      resolved: null
+    }
+  },
+  {
+    id: 'rep-106',
+    title: 'Crater Cavity at Metro Pier Transition',
+    description: 'Sharp-edged pothole cavity measuring 1.2m across in central bus lane. Standing rainwater obscures depth during evening peak commute.',
+    defect_type: 'Severe Pothole (D40)',
+    severity: 'high',
+    risk_score: 0.91,
+    status: 'confirmed',
+    latitude: 18.5604,
+    longitude: 73.9168,
+    location_name: 'Nagar Road, Near Phoenix Marketcity, Viman Nagar',
+    zone: 'Ward 14 - Viman Nagar / Kalyani Nagar',
+    created_at: '2026-10-22T06:15:00Z',
+    citizen_name: 'Kunal S.',
+    upvotes: 39,
+    budget_allocated: 8800,
+    contractor: 'Metro Roadworks Corp.',
+    imageUrl: 'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=800&q=80',
+    milestones: {
+      before: 'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=800&q=80',
+      in_progress: null,
+      resolved: null
+    }
+  },
+  {
+    id: 'rep-107',
+    title: 'Longitudinal Thermal Joint Rutting',
+    description: 'Wheel rutting depth 35mm causing vehicle steering drag during lane changes. Surface aggregate raveling.',
+    defect_type: 'Rutting & Longitudinal Crack (D10)',
+    severity: 'medium',
+    risk_score: 0.68,
+    status: 'in_progress',
+    latitude: 18.5638,
+    longitude: 73.8077,
+    location_name: 'Aundh-Baner Link Road, Near Medipoint Hospital',
+    zone: 'Ward 2 - Aundh / Baner Corridor',
+    created_at: '2026-10-20T11:05:00Z',
+    citizen_name: 'Vikram N.',
+    upvotes: 22,
+    budget_allocated: 6400,
+    contractor: 'GreenPave Highway Solutions',
+    imageUrl: 'https://images.unsplash.com/photo-1584463699059-994326f63456?auto=format&fit=crop&w=800&q=80',
+    milestones: {
+      before: 'https://images.unsplash.com/photo-1584463699059-994326f63456?auto=format&fit=crop&w=800&q=80',
+      in_progress: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80',
+      resolved: null
+    }
+  },
+  {
+    id: 'rep-108',
+    title: 'Edge Spalling & Shoulder Breakdown',
+    description: 'Pavement edge unraveling into unpaved shoulder over 15 meters. Lateral support loss along canal embankment.',
+    defect_type: 'Edge Crack / Spalling (D30)',
+    severity: 'medium',
+    risk_score: 0.64,
+    status: 'confirmed',
+    latitude: 18.4912,
+    longitude: 73.8291,
+    location_name: 'Sinhagad Road, Near Rajaram Bridge',
+    zone: 'Ward 11 - Sinhagad Road Corridor',
+    created_at: '2026-10-19T16:20:00Z',
+    citizen_name: 'Mandar J.',
+    upvotes: 31,
+    budget_allocated: 7900,
+    contractor: 'Apex Infra Projects Ltd.',
+    imageUrl: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=800&q=80',
+    milestones: {
+      before: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=800&q=80',
+      in_progress: null,
+      resolved: null
+    }
+  },
+  {
+    id: 'rep-109',
+    title: 'Block Cracking Pattern on Approach Gradient',
+    description: 'Interconnected square fatigue crack blocks spanning 20 sq meters. Moisture seepage noted at seam intersections.',
+    defect_type: 'Block Cracking (D20)',
+    severity: 'medium',
+    risk_score: 0.70,
+    status: 'in_progress',
+    latitude: 18.5398,
+    longitude: 73.8297,
+    location_name: 'University Road / Ganeshkhind, Near Pune University Circle',
+    zone: 'Ward 5 - Shivaji Nagar / Model Colony',
+    created_at: '2026-10-21T13:40:00Z',
+    citizen_name: 'Snehal T.',
+    upvotes: 27,
+    budget_allocated: 8300,
+    contractor: 'Metro Roadworks Corp.',
+    imageUrl: 'https://images.unsplash.com/photo-1584463699059-994326f63456?auto=format&fit=crop&w=800&q=80',
+    milestones: {
+      before: 'https://images.unsplash.com/photo-1584463699059-994326f63456?auto=format&fit=crop&w=800&q=80',
+      in_progress: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80',
+      resolved: null
+    }
+  },
+  {
+    id: 'rep-110',
+    title: 'Patch Deterioration & Corrugation Shoving',
+    description: 'Previous cold-mix repair has pushed into 40mm asphalt ripples at signalized intersection stop line.',
+    defect_type: 'Shoving / Pavement Corrugation (D30)',
+    severity: 'medium',
+    risk_score: 0.58,
+    status: 'confirmed',
+    latitude: 18.5144,
+    longitude: 73.9272,
+    location_name: 'Hadapsar - Solapur Road, Near Magarpatta City North Gate',
+    zone: 'Ward 16 - Hadapsar / Magarpatta',
+    created_at: '2026-10-22T08:00:00Z',
+    citizen_name: 'Rahul K.',
+    upvotes: 18,
+    budget_allocated: 5200,
+    contractor: 'Pending Assignment',
+    imageUrl: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=800&q=80',
+    milestones: {
+      before: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=800&q=80',
       in_progress: null,
       resolved: null
     }

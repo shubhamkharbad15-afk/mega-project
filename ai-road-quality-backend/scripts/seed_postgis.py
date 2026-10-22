@@ -60,6 +60,78 @@ PUNE_REPORTS = [
             "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80"
         ],
     },
+    {
+        "id": uuid.UUID("55555555-5555-4555-8555-555555555555"),
+        "title": "Severe Trench Subsidence & Manhole Dip",
+        "description": "18cm deep road cut depression across two lanes. High risk of toppling for two-wheelers and severe axle impact.",
+        "status": "confirmed",
+        "severity": "high",
+        "latitude": 18.5065,
+        "longitude": 73.8322,
+        "evidence": [
+            "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80"
+        ],
+    },
+    {
+        "id": uuid.UUID("66666666-6666-4666-8666-666666666666"),
+        "title": "Crater Cavity at Metro Pier Transition",
+        "description": "Sharp-edged pothole cavity measuring 1.2m across in central bus lane. Standing rainwater obscures depth during evening peak commute.",
+        "status": "confirmed",
+        "severity": "high",
+        "latitude": 18.5604,
+        "longitude": 73.9168,
+        "evidence": [
+            "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=800&q=80"
+        ],
+    },
+    {
+        "id": uuid.UUID("77777777-7777-4777-8777-777777777777"),
+        "title": "Longitudinal Thermal Joint Rutting",
+        "description": "Wheel rutting depth 35mm causing vehicle steering drag during lane changes. Surface aggregate raveling.",
+        "status": "in_progress",
+        "severity": "medium",
+        "latitude": 18.5638,
+        "longitude": 73.8077,
+        "evidence": [
+            "https://images.unsplash.com/photo-1584463699059-994326f63456?auto=format&fit=crop&w=800&q=80"
+        ],
+    },
+    {
+        "id": uuid.UUID("88888888-8888-4888-8888-888888888888"),
+        "title": "Edge Spalling & Shoulder Breakdown",
+        "description": "Pavement edge unraveling into unpaved shoulder over 15 meters. Lateral support loss along canal embankment.",
+        "status": "confirmed",
+        "severity": "medium",
+        "latitude": 18.4912,
+        "longitude": 73.8291,
+        "evidence": [
+            "https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=800&q=80"
+        ],
+    },
+    {
+        "id": uuid.UUID("99999999-9999-4999-8999-999999999999"),
+        "title": "Block Cracking Pattern on Approach Gradient",
+        "description": "Interconnected square fatigue crack blocks spanning 20 sq meters. Moisture seepage noted at seam intersections.",
+        "status": "in_progress",
+        "severity": "medium",
+        "latitude": 18.5398,
+        "longitude": 73.8297,
+        "evidence": [
+            "https://images.unsplash.com/photo-1584463699059-994326f63456?auto=format&fit=crop&w=800&q=80"
+        ],
+    },
+    {
+        "id": uuid.UUID("aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"),
+        "title": "Patch Deterioration & Corrugation Shoving",
+        "description": "Previous cold-mix repair has pushed into 40mm asphalt ripples at signalized intersection stop line.",
+        "status": "confirmed",
+        "severity": "medium",
+        "latitude": 18.5144,
+        "longitude": 73.9272,
+        "evidence": [
+            "https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=800&q=80"
+        ],
+    },
 ]
 
 

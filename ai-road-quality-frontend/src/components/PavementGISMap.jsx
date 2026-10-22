@@ -5,26 +5,21 @@ import { Layers, Crosshair, Maximize2, ShieldAlert, AlertTriangle, Info, MapPin 
 
 const PUNE_CENTER = [18.5204, 73.8567]; // FC Road, Deccan Gymkhana
 
-// Tile layer providers
+// Tile layer providers - 100% public & keyless (zero API keys required)
 const TILE_LAYERS = {
   streets: {
-    name: 'Municipal Street Map',
-    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    name: 'OpenStreetMap Standard',
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors',
     maxZoom: 19,
-    subdomains: 'abcd',
+    subdomains: ['a', 'b', 'c'],
   },
   satellite: {
     name: 'Satellite Aerial',
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     attribution: '&copy; Esri, Maxar, Earthstar Geographics',
     maxZoom: 18,
-  },
-  osm: {
-    name: 'OpenStreetMap Standard',
-    url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-    attribution: '&copy; OpenStreetMap contributors',
-    maxZoom: 19,
+    subdomains: ['server', 'services'],
   },
 };
 
@@ -49,7 +44,7 @@ export default function PavementGISMap({
 
     const map = L.map(mapContainerRef.current, {
       center: userCoordinates,
-      zoom: 14,
+      zoom: 13,
       zoomControl: false,
       attributionControl: false,
     });
@@ -60,13 +55,17 @@ export default function PavementGISMap({
     // Add minimal attribution bottom-right
     L.control.attribution({ position: 'bottomright', prefix: false }).addTo(map);
 
-    // Initial tile layer
+    // Initial tile layer - 100% free OpenStreetMap (no API key required)
     const initialTile = TILE_LAYERS.streets;
     const tileLayer = L.tileLayer(initialTile.url, {
       attribution: initialTile.attribution,
       maxZoom: initialTile.maxZoom,
-      subdomains: initialTile.subdomains || 'abc',
+      subdomains: initialTile.subdomains || ['a', 'b', 'c'],
     }).addTo(map);
+
+    tileLayer.on('tileerror', (e) => {
+      // Graceful fallback for occasional network timeouts
+    });
 
     // Layer group for pins
     const markersLayer = L.layerGroup().addTo(map);
@@ -98,8 +97,10 @@ export default function PavementGISMap({
     const newTileLayer = L.tileLayer(config.url, {
       attribution: config.attribution,
       maxZoom: config.maxZoom,
-      subdomains: config.subdomains || 'abc',
+      subdomains: config.subdomains || ['a', 'b', 'c'],
     }).addTo(map);
+
+    newTileLayer.on('tileerror', () => {});
 
     tileLayerRef.current = newTileLayer;
   }, [activeTileType]);
@@ -264,7 +265,7 @@ export default function PavementGISMap({
                 : 'hover:text-slate-950 hover:bg-slate-100'
             }`}
           >
-            Streets
+            Street Map
           </button>
           <button
             onClick={() => setActiveTileType('satellite')}
@@ -274,7 +275,7 @@ export default function PavementGISMap({
                 : 'hover:text-slate-950 hover:bg-slate-100'
             }`}
           >
-            Satellite
+            Satellite View
           </button>
         </div>
 
