@@ -23,6 +23,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { runDetection, submitRoadReport, getRepairAdvice } from '../api';
+import PavementGISMap from './PavementGISMap';
 
 export default function CitizenTerminal({ reports, setReports, isMobileFrame }) {
   const [activeTab, setActiveTab] = useState('camera'); // camera | map | reports | assistant
@@ -1142,51 +1143,13 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
               </span>
             </div>
 
-            {/* Vector Map */}
-            <div className="relative rounded-2xl bg-slate-100 border border-slate-300 aspect-video overflow-hidden p-4 shadow-inner">
-              <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:16px_16px]"></div>
-              
-              <div className="absolute top-1/2 left-0 right-0 h-5 bg-white -translate-y-1/2 border-y border-dashed border-slate-300"></div>
-              <div className="absolute top-0 bottom-0 left-1/3 w-5 bg-white border-x border-dashed border-slate-300"></div>
-              <div className="absolute top-0 bottom-0 left-2/3 w-5 bg-white border-x border-dashed border-slate-300"></div>
-
-              {/* User Center GPS Marker */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-                <span className="w-6 h-6 rounded-full bg-sky-400/30 border border-sky-500 animate-ping absolute"></span>
-                <div className="w-4 h-4 rounded-full bg-sky-600 border-2 border-white shadow-md z-10"></div>
-                <span className="mt-1 bg-white text-[9px] font-mono text-sky-800 px-1.5 py-0.5 rounded shadow border border-slate-200 font-bold">You</span>
-              </div>
-
-              {/* Defect Pins */}
-              {reports.map((rep, idx) => {
-                const offsets = [
-                  { top: '35%', left: '42%' },
-                  { top: '65%', left: '28%' },
-                  { top: '25%', left: '72%' },
-                  { top: '70%', left: '60%' }
-                ];
-                const pos = offsets[idx % offsets.length];
-                const isHigh = rep.severity === 'high';
-
-                return (
-                  <button
-                    key={rep.id ? `pin-${rep.id}` : `pin-idx-${idx}`}
-                    onClick={() => setSelectedReport(rep)}
-                    className="absolute -translate-x-1/2 -translate-y-1/2 group focus:outline-none"
-                    style={pos}
-                  >
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white shadow-md transition-transform group-hover:scale-125 ${
-                      isHigh ? 'bg-red-600 ring-4 ring-red-100' : 'bg-amber-500 ring-4 ring-amber-100'
-                    }`}>
-                      !
-                    </div>
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-7 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] font-medium px-2 py-1 rounded shadow-xl whitespace-nowrap z-20">
-                      {rep.title} ({rep.severity})
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
+            {/* Real Interactive GIS Map */}
+            <PavementGISMap
+              reports={reports}
+              selectedReport={selectedReport}
+              onSelectReport={(rep) => setSelectedReport(rep)}
+              userCoordinates={[18.5204, 73.8567]}
+            />
 
             {/* Nearby Incidents List */}
             <div className="space-y-2">
@@ -1398,7 +1361,7 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
 
       {/* Real Snapshot Review Modal */}
       {reviewModalData && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-[1050] flex items-center justify-center p-4">
           <div className="bg-white border border-slate-300 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
@@ -1471,7 +1434,7 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
       {selectedReport && (
         <div 
           onClick={(e) => { if (e.target === e.currentTarget) setSelectedReport(null); }}
-          className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto"
+          className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-[1050] flex items-center justify-center p-4 overflow-y-auto"
         >
           <div className="bg-white border border-slate-300 rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-2xl my-auto">
             <div className="flex justify-between items-start gap-3">
