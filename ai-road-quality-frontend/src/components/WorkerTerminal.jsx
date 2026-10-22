@@ -87,13 +87,13 @@ export default function WorkerTerminal({ reports, setReports }) {
       <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-            <span className="px-2.5 py-0.5 rounded text-[11px] font-mono font-bold bg-amber-100 text-amber-800 border border-amber-300">
-              FIELD MAINTENANCE TERMINAL
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-900 border border-amber-200">
+              Field Maintenance Ops
             </span>
-            <span className="hidden sm:inline text-slate-400">•</span>
-            <span className="text-[11px] sm:text-xs text-slate-500 font-mono">Contractor Dispatch Unit #04</span>
+            <span className="hidden sm:inline text-slate-300">•</span>
+            <span className="text-xs text-slate-500 font-medium">Contractor Dispatch Unit #04</span>
           </div>
-          <h1 className="text-lg sm:text-xl font-bold text-slate-900 mt-1">Field Work Execution & Milestone Proof</h1>
+          <h1 className="text-lg sm:text-xl font-bold text-slate-900 mt-1.5 tracking-tight">Field Work Execution & Milestone Proof</h1>
           <p className="text-xs text-slate-500">Step-by-step repair execution, eco-material ratios, and photo verification</p>
         </div>
 

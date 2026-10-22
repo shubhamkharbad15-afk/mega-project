@@ -67,15 +67,15 @@ export default function Sidebar({
       <div className="p-4 sm:p-5 border-b border-slate-200">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center shadow-md shadow-amber-500/20 text-slate-950 font-bold border border-amber-600/30 flex-shrink-0">
-              <ShieldAlert className="w-6 h-6" />
+            <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-amber-400 font-bold border border-slate-800 shadow-sm flex-shrink-0">
+              <ShieldAlert className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="font-extrabold text-base tracking-tight text-slate-900">AI Road Quality</span>
+                <span className="font-bold text-base tracking-tight text-slate-900">RoadQuality</span>
               </div>
-              <p className="text-[11px] font-mono font-medium text-amber-700">
-                FINAL YEAR MEGA PROJECT
+              <p className="text-[11px] font-medium text-slate-500">
+                Municipal Works Platform
               </p>
             </div>
           </div>
@@ -90,8 +90,8 @@ export default function Sidebar({
             </button>
           )}
         </div>
-        <p className="text-[11px] text-slate-500 mt-2 leading-relaxed">
-          Automated Pothole Sensing, Multi-Persona Governance & Eco-Repair
+        <p className="text-xs text-slate-500 mt-2 leading-relaxed">
+          Municipal pavement condition sensing, spatial triage, and contractor dispatch.
         </p>
       </div>
 

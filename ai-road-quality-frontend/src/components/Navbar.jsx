@@ -33,18 +33,18 @@ export default function Navbar({
           
           {/* Brand & Project Identity */}
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-hazard-500 to-amber-700 flex items-center justify-center shadow-lg shadow-hazard-500/10 border border-hazard-400/40">
-              <ShieldAlert className="w-6 h-6 text-asphalt-950" />
+            <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center border border-slate-800 shadow-sm text-amber-400">
+              <ShieldAlert className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="font-bold text-base tracking-tight text-white">AI Road Quality</span>
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-medium bg-hazard-500/20 text-hazard-400 border border-hazard-500/30">
-                  MEGA PROJECT
+                <span className="font-bold text-base tracking-tight text-white">RoadQuality</span>
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-800 text-slate-300 border border-slate-700">
+                  Municipal Works
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 font-mono hidden sm:block">
-                Automated Sensing • Multi-Persona Governance • Eco-Repair
+              <p className="text-xs text-slate-400 hidden sm:block">
+                Pavement Condition Monitoring & Infrastructure Governance
               </p>
             </div>
           </div>

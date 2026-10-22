@@ -721,137 +721,120 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
           </div>
         )}
 
-        {/* App Header (Clean Responsive Alignment for Mobile & Desktop) */}
-        <div className="bg-slate-50/90 p-3.5 sm:p-4 border-b border-slate-200">
-          <div className="flex items-center justify-between gap-2">
+        {/* App Header */}
+        <div className="bg-white p-4 sm:p-5 border-b border-slate-200">
+          <div className="flex items-center justify-between gap-3">
             <div className="min-w-0 flex-1">
               <div className="flex items-center space-x-2">
-                <h2 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight truncate">
-                  Live Pavement AI Vision
+                <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+                  Pavement Inspection
                 </h2>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300 font-mono flex-shrink-0">
-                  YOLOv11
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-700 border border-slate-200 flex-shrink-0">
+                  Surface Vision
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 font-mono truncate mt-0.5">
-                Target: Distresses D00, D10, D20, D40 (Potholes)
+              <p className="text-xs text-slate-500 mt-0.5 truncate">
+                Automated road distress classification and municipal geo-reporting
               </p>
             </div>
 
-            <div className="flex items-center space-x-1.5 sm:space-x-2 flex-shrink-0">
+            <div className="flex items-center space-x-2 flex-shrink-0">
               <button
                 onClick={() => setSoundEnabled(!soundEnabled)}
-                className="p-1.5 rounded-lg bg-white border border-slate-200 text-slate-600 hover:text-slate-900 shadow-xs transition-colors"
-                title="Toggle Audio Hazard Chime"
+                className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 transition-colors shadow-2xs"
+                title={soundEnabled ? "Mute hazard alert" : "Enable hazard audio alert"}
               >
                 {soundEnabled ? <Volume2 className="w-4 h-4 text-amber-600" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
               </button>
-              <div className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-bold ${
-                isCameraActive ? 'bg-emerald-50 text-emerald-800 border border-emerald-300' : 'bg-slate-100 text-slate-600'
+              <div className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold ${
+                isCameraActive 
+                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+                  : 'bg-slate-100 text-slate-600 border border-slate-200'
               }`}>
-                <span className={`w-2 h-2 rounded-full ${isCameraActive ? 'bg-emerald-600 animate-ping' : 'bg-slate-400'}`}></span>
-                <span>{isCameraActive ? 'LIVE' : 'OFF'}</span>
+                <span className={`w-2 h-2 rounded-full ${isCameraActive ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`}></span>
+                <span>{isCameraActive ? 'Camera Live' : 'Standby'}</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Navigation Tabs (Properly Aligned & Responsive with No Clipping) */}
-        <div className="grid grid-cols-4 border-b border-slate-200 bg-white">
-          <button
-            onClick={() => setActiveTab('camera')}
-            className={`py-2.5 sm:py-3 px-1 flex flex-col sm:flex-row items-center justify-center gap-1 border-b-2 transition-colors min-w-0 ${
-              activeTab === 'camera' ? 'border-amber-500 text-amber-800 bg-amber-50/50 font-bold' : 'border-transparent text-slate-500 hover:text-slate-900 font-medium'
-            }`}
-          >
-            <Camera className="w-4 h-4 flex-shrink-0" />
-            <span className="text-[11px] sm:text-xs text-center truncate">Live Cam</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('map')}
-            className={`py-2.5 sm:py-3 px-1 flex flex-col sm:flex-row items-center justify-center gap-1 border-b-2 transition-colors min-w-0 ${
-              activeTab === 'map' ? 'border-amber-500 text-amber-800 bg-amber-50/50 font-bold' : 'border-transparent text-slate-500 hover:text-slate-900 font-medium'
-            }`}
-          >
-            <MapPin className="w-4 h-4 flex-shrink-0" />
-            <span className="text-[11px] sm:text-xs text-center truncate">GIS Map</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('reports')}
-            className={`py-2.5 sm:py-3 px-1 flex flex-col sm:flex-row items-center justify-center gap-1 border-b-2 transition-colors min-w-0 ${
-              activeTab === 'reports' ? 'border-amber-500 text-amber-800 bg-amber-50/50 font-bold' : 'border-transparent text-slate-500 hover:text-slate-900 font-medium'
-            }`}
-          >
-            <ListFilter className="w-4 h-4 flex-shrink-0" />
-            <span className="text-[11px] sm:text-xs text-center truncate">My Reports</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('assistant')}
-            className={`py-2.5 sm:py-3 px-1 flex flex-col sm:flex-row items-center justify-center gap-1 border-b-2 transition-colors min-w-0 ${
-              activeTab === 'assistant' ? 'border-amber-500 text-amber-800 bg-amber-50/50 font-bold' : 'border-transparent text-slate-500 hover:text-slate-900 font-medium'
-            }`}
-          >
-            <Sparkles className="w-4 h-4 flex-shrink-0" />
-            <span className="text-[11px] sm:text-xs text-center truncate">AI Advice</span>
-          </button>
+        {/* Navigation Tabs (Segmented Clean Control) */}
+        <div className="p-2 bg-slate-100/70 border-b border-slate-200">
+          <div className="grid grid-cols-4 gap-1.5 bg-slate-200/60 p-1 rounded-xl">
+            <button
+              onClick={() => setActiveTab('camera')}
+              className={`py-2 px-1 flex flex-col sm:flex-row items-center justify-center gap-1.5 rounded-lg text-xs font-semibold transition-all ${
+                activeTab === 'camera' 
+                  ? 'bg-white text-slate-950 shadow-xs font-bold' 
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/40'
+              }`}
+            >
+              <Camera className="w-4 h-4 flex-shrink-0" />
+              <span className="truncate">Inspection</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('map')}
+              className={`py-2 px-1 flex flex-col sm:flex-row items-center justify-center gap-1.5 rounded-lg text-xs font-semibold transition-all ${
+                activeTab === 'map' 
+                  ? 'bg-white text-slate-950 shadow-xs font-bold' 
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/40'
+              }`}
+            >
+              <MapPin className="w-4 h-4 flex-shrink-0" />
+              <span className="truncate">GIS Map</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('reports')}
+              className={`py-2 px-1 flex flex-col sm:flex-row items-center justify-center gap-1.5 rounded-lg text-xs font-semibold transition-all ${
+                activeTab === 'reports' 
+                  ? 'bg-white text-slate-950 shadow-xs font-bold' 
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/40'
+              }`}
+            >
+              <ListFilter className="w-4 h-4 flex-shrink-0" />
+              <span className="truncate">Reports</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('assistant')}
+              className={`py-2 px-1 flex flex-col sm:flex-row items-center justify-center gap-1.5 rounded-lg text-xs font-semibold transition-all ${
+                activeTab === 'assistant' 
+                  ? 'bg-white text-slate-950 shadow-xs font-bold' 
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/40'
+              }`}
+            >
+              <Sparkles className="w-4 h-4 flex-shrink-0" />
+              <span className="truncate">Field Guide</span>
+            </button>
+          </div>
         </div>
 
         {/* Tab 1: Live Hardware Camera with Intelligent Pothole vs. Good Road Analysis */}
         {activeTab === 'camera' && (
-          <div className="p-4 space-y-4 flex-1">
+          <div className="p-4 sm:p-5 space-y-4 flex-1">
 
-            {/* Camera Source Selector */}
-            <div className="flex flex-wrap items-center justify-between gap-2 bg-slate-100 p-1.5 rounded-xl border border-slate-200 text-xs">
-              <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider pl-1 hidden sm:inline">Feed Source:</span>
-              <div className="flex flex-wrap items-center gap-1.5 flex-1 sm:flex-initial justify-end">
-                <button
-                  onClick={() => {
-                    setCustomUpload(null);
-                    startCamera();
-                  }}
-                  className={`px-3 py-1.5 rounded-lg font-semibold flex items-center space-x-1.5 transition-all text-xs cursor-pointer ${
-                    isCameraActive
-                      ? 'bg-amber-500 text-slate-950 font-bold shadow-xs'
-                      : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'
-                  }`}
-                >
-                  <Camera className="w-3.5 h-3.5" />
-                  <span>Hardware Webcam</span>
-                </button>
-                <button
-                  onClick={() => nativeCameraInputRef.current?.click()}
-                  className="px-3 py-1.5 rounded-lg font-semibold flex items-center space-x-1.5 transition-all text-xs cursor-pointer bg-white text-slate-700 hover:bg-slate-50 border border-slate-200"
-                >
-                  <Smartphone className="w-3.5 h-3.5" />
-                  <span>Phone Camera</span>
-                </button>
-                <label className={`px-3 py-1.5 rounded-lg font-semibold flex items-center space-x-1.5 transition-all text-xs cursor-pointer ${
-                  customUpload
-                    ? 'bg-sky-600 text-white font-bold shadow-xs'
-                    : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'
-                }`}>
-                  <Upload className="w-3.5 h-3.5" />
-                  <span>Upload Image</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onClick={(e) => { e.target.value = null; }}
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        const reader = new FileReader();
-                        reader.onload = () => analyzeLoadedImage(reader.result);
-                        reader.readAsDataURL(file);
-                      }
+            {/* Active Feed Source Indicator (Only when camera or upload is active) */}
+            {(isCameraActive || customUpload) && (
+              <div className="flex items-center justify-between bg-slate-100 px-3 py-2 rounded-xl border border-slate-200 text-xs">
+                <span className="font-semibold text-slate-700 flex items-center space-x-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span>{customUpload ? 'Uploaded Road Image Analysis' : 'Live Hardware Video Stream'}</span>
+                </span>
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => {
+                      setCustomUpload(null);
+                      stopCamera();
                     }}
-                  />
-                </label>
+                    className="text-xs text-slate-600 hover:text-slate-900 font-semibold px-2 py-1 rounded-lg hover:bg-slate-200 transition-colors"
+                  >
+                    Change Source
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
             
             {/* Viewport Container */}
-            <div className="relative rounded-2xl overflow-hidden aspect-video bg-black border border-slate-300 shadow-inner group flex items-center justify-center">
+            <div className="relative rounded-2xl overflow-hidden min-h-[320px] sm:min-h-[380px] bg-gradient-to-b from-slate-900 via-slate-900/98 to-slate-950 border border-slate-800 shadow-xl flex items-center justify-center">
               
               {/* Real Video Element (Hardware Camera) */}
               <video
@@ -869,54 +852,59 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
                 <img
                   src={customUpload}
                   alt="Uploaded Road"
-                  className="w-full h-full object-contain bg-slate-900"
+                  className="w-full h-full object-contain bg-slate-950"
                 />
               )}
 
-              {/* Inactive Standby Screen */}
+              {/* Inactive Standby Screen (Centered with Balanced Proportions & No Clipping) */}
               {!isCameraActive && !customUpload && (
-                <div className="text-center p-6 space-y-3 z-10">
-                  <div className="w-14 h-14 rounded-2xl bg-slate-800 text-amber-400 flex items-center justify-center mx-auto border border-slate-700 shadow-md">
+                <div className="relative z-10 text-center px-6 py-8 sm:py-10 max-w-md mx-auto space-y-4">
+                  <div className="relative w-16 h-16 rounded-2xl bg-slate-800/90 border border-slate-700/80 text-amber-400 flex items-center justify-center mx-auto shadow-inner">
                     <Camera className="w-7 h-7" />
+                    <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-amber-500 ring-4 ring-slate-900"></span>
                   </div>
-                  <div>
-                    <h3 className="text-white font-bold text-sm">
-                      {isStartingCamera ? 'Connecting Hardware Camera...' : 'Camera & Pavement Sensor Standby'}
+
+                  <div className="space-y-1.5">
+                    <h3 className="text-white font-bold text-base sm:text-lg tracking-tight">
+                      {isStartingCamera ? 'Connecting Camera...' : 'Road Surface Scanner'}
                     </h3>
-                    <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1 leading-relaxed">
-                      Connect your camera or upload a road inspection photo to run real-time defect analysis.
+                    <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-sm mx-auto">
+                      Aim your phone camera at the roadway or capture a photo to classify potholes and pavement quality.
                     </p>
                   </div>
-                  <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+
+                  <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-2.5">
+                    <button
+                      onClick={() => nativeCameraInputRef.current?.click()}
+                      className="w-full sm:w-auto bg-amber-500 hover:bg-amber-400 active:scale-95 text-slate-950 font-bold px-5 py-2.5 rounded-xl text-xs sm:text-sm shadow-md transition-all inline-flex items-center justify-center space-x-2 cursor-pointer"
+                    >
+                      <Smartphone className="w-4 h-4" />
+                      <span>Snap Road Photo</span>
+                    </button>
+
                     {hasWebRTC && (
                       <button
                         onClick={() => startCamera()}
                         disabled={isStartingCamera}
-                        className="bg-amber-500 hover:bg-amber-600 disabled:opacity-60 active:scale-95 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs shadow-md transition-all inline-flex items-center space-x-1.5 cursor-pointer"
+                        className="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 active:scale-95 text-white font-semibold px-4 py-2.5 rounded-xl text-xs sm:text-sm border border-slate-700 shadow-sm transition-all inline-flex items-center justify-center space-x-2 cursor-pointer"
                       >
                         {isStartingCamera ? (
                           <>
-                            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                            <span>Starting Webcam...</span>
+                            <RefreshCw className="w-4 h-4 animate-spin text-amber-400" />
+                            <span>Starting...</span>
                           </>
                         ) : (
                           <>
-                            <Camera className="w-3.5 h-3.5" />
-                            <span>Start Hardware Webcam</span>
+                            <Camera className="w-4 h-4 text-slate-300" />
+                            <span>Live Webcam</span>
                           </>
                         )}
                       </button>
                     )}
-                    <button
-                      onClick={() => nativeCameraInputRef.current?.click()}
-                      className="bg-slate-700 hover:bg-slate-600 active:scale-95 text-white font-semibold px-4 py-2.5 rounded-xl text-xs shadow-md transition-all inline-flex items-center space-x-1.5 cursor-pointer"
-                    >
-                      <Smartphone className="w-3.5 h-3.5" />
-                      <span>Snap with Phone Camera</span>
-                    </button>
-                    <label className="bg-slate-800 hover:bg-slate-700 active:scale-95 text-white font-semibold px-4 py-2.5 rounded-xl text-xs shadow-md transition-all inline-flex items-center space-x-1.5 cursor-pointer border border-slate-600">
-                      <Upload className="w-3.5 h-3.5" />
-                      <span>Upload Road Photo</span>
+
+                    <label className="w-full sm:w-auto bg-slate-800/80 hover:bg-slate-700 active:scale-95 text-slate-300 hover:text-white font-medium px-4 py-2.5 rounded-xl text-xs sm:text-sm border border-slate-700/80 transition-all inline-flex items-center justify-center space-x-2 cursor-pointer">
+                      <Upload className="w-4 h-4" />
+                      <span>Choose File</span>
                       <input
                         type="file"
                         accept="image/*"
@@ -1092,121 +1080,59 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
               </div>
             )}
 
-            {/* Controls & Sensitivity Filter */}
-            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+            {/* Detection Sensitivity Threshold */}
+            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <h4 className="text-xs font-bold text-slate-900 flex items-center space-x-1.5">
-                    <Sliders className="w-3.5 h-3.5 text-amber-600" />
-                    <span>Pothole Sensitivity (False Positive Filter)</span>
+                    <Sliders className="w-3.5 h-3.5 text-slate-600" />
+                    <span>Defect Detection Threshold</span>
                   </h4>
-                  <p className="text-[11px] text-slate-500">
-                    Prevents false triggers on smooth clean roads
+                  <p className="text-[11px] text-slate-500 mt-0.5">
+                    Filters surface texture variations to isolate confirmed road damage
                   </p>
                 </div>
 
-                <div className="flex items-center space-x-1 bg-white p-1 rounded-xl border border-slate-200 text-xs font-medium">
+                <div className="flex items-center space-x-1 bg-slate-200/60 p-1 rounded-xl text-xs font-medium">
                   <button
                     onClick={() => setSensitivity('strict')}
-                    className={`px-2.5 py-1 rounded-lg transition-all text-[11px] ${
+                    className={`px-3 py-1.5 rounded-lg transition-all text-xs font-semibold ${
                       sensitivity === 'strict'
-                        ? 'bg-emerald-600 text-white font-bold shadow-xs'
-                        : 'text-slate-600 hover:bg-slate-100'
+                        ? 'bg-white text-slate-950 shadow-xs font-bold'
+                        : 'text-slate-600 hover:text-slate-900'
                     }`}
                   >
-                    Strict (Clean Road Safe)
+                    High Precision
                   </button>
                   <button
                     onClick={() => setSensitivity('normal')}
-                    className={`px-2.5 py-1 rounded-lg transition-all text-[11px] ${
+                    className={`px-3 py-1.5 rounded-lg transition-all text-xs font-semibold ${
                       sensitivity === 'normal'
-                        ? 'bg-amber-500 text-slate-950 font-bold shadow-xs'
-                        : 'text-slate-600 hover:bg-slate-100'
+                        ? 'bg-white text-slate-950 shadow-xs font-bold'
+                        : 'text-slate-600 hover:text-slate-900'
                     }`}
                   >
                     Standard
                   </button>
                   <button
                     onClick={() => setSensitivity('high')}
-                    className={`px-2.5 py-1 rounded-lg transition-all text-[11px] ${
+                    className={`px-3 py-1.5 rounded-lg transition-all text-xs font-semibold ${
                       sensitivity === 'high'
-                        ? 'bg-red-600 text-white font-bold shadow-xs'
-                        : 'text-slate-600 hover:bg-slate-100'
+                        ? 'bg-white text-slate-950 shadow-xs font-bold'
+                        : 'text-slate-600 hover:text-slate-900'
                     }`}
                   >
-                    High
+                    High Sensitivity
                   </button>
-                </div>
-              </div>
-
-              {/* Hardware Actions */}
-              <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200 text-xs">
-                <div className="flex flex-wrap items-center gap-2">
-                  <button
-                    onClick={() => nativeCameraInputRef.current?.click()}
-                    className="bg-white hover:bg-slate-100 text-slate-800 font-semibold px-3 py-1.5 rounded-lg border border-slate-300 shadow-xs flex items-center space-x-1.5"
-                  >
-                    <Smartphone className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>Snap with Phone Camera</span>
-                  </button>
-
-                  <label className="cursor-pointer bg-white hover:bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg flex items-center space-x-1.5 border border-slate-300 font-medium shadow-xs">
-                    <Upload className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Upload Image File</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onClick={(e) => { e.target.value = null; }}
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          const reader = new FileReader();
-                          reader.onload = () => {
-                            analyzeLoadedImage(reader.result);
-                          };
-                          reader.readAsDataURL(file);
-                        }
-                      }}
-                    />
-                  </label>
-
-                  {customUpload && (
-                    <button
-                      onClick={() => {
-                        setCustomUpload(null);
-                        setDetections([]);
-                        if (overlayCanvasRef.current) {
-                          const ctx = overlayCanvasRef.current.getContext('2d');
-                          ctx.clearRect(0, 0, overlayCanvasRef.current.width, overlayCanvasRef.current.height);
-                        }
-                        if (hasWebRTC) startCamera();
-                      }}
-                      className="text-[11px] text-red-600 hover:underline font-bold"
-                    >
-                      Clear File
-                    </button>
-                  )}
-                </div>
-
-                <div className="flex items-center space-x-2 font-mono text-[11px]">
-                  <span>Defects in view:</span>
-                  <span className={`px-2 py-0.5 rounded font-bold ${
-                    detections.length > 0 
-                      ? 'bg-red-100 text-red-800 border border-red-300' 
-                      : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                  }`}>
-                    {detections.length}
-                  </span>
                 </div>
               </div>
             </div>
 
-            {/* Privacy Note */}
-            <div className="flex items-start space-x-2.5 bg-sky-50/70 p-3 rounded-xl border border-sky-200 text-[11px] text-sky-900">
-              <ShieldCheck className="w-4 h-4 text-sky-700 flex-shrink-0 mt-0.5" />
+            {/* Privacy & Performance Note */}
+            <div className="flex items-start space-x-2.5 bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-xs text-slate-600">
+              <ShieldCheck className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
               <span>
-                <strong>Intelligent Inspection:</strong> Real-time frame processing runs locally. Smooth roads are certified clean and will not trigger false alerts.
+                <strong>Edge Processing Active:</strong> Video frames are analyzed locally in your browser. Road images are only published when you confirm and log an incident.
               </span>
             </div>
 

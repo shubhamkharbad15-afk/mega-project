@@ -63,14 +63,14 @@ export default function AdminTerminal() {
       <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-            <span className="px-2.5 py-0.5 rounded text-[11px] font-mono font-bold bg-sky-100 text-sky-800 border border-sky-300">
-              MLOPS & SYSTEM TELEMETRY
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-50 text-sky-900 border border-sky-200">
+              System Administration & Telemetry
             </span>
-            <span className="hidden sm:inline text-slate-400">•</span>
-            <span className="text-[11px] sm:text-xs text-slate-500 font-mono">YOLOv11 Engine & PostGIS Diagnostics</span>
+            <span className="hidden sm:inline text-slate-300">•</span>
+            <span className="text-xs text-slate-500 font-medium">Vision Engine & Spatial Diagnostics</span>
           </div>
-          <h1 className="text-lg sm:text-xl font-bold text-slate-900 mt-1">Developer & Administrative Command Center</h1>
-          <p className="text-xs text-slate-500">Model drift tracking, automated retraining pipeline, and RBAC security</p>
+          <h1 className="text-lg sm:text-xl font-bold text-slate-900 mt-1.5 tracking-tight">Administrative & Operations Console</h1>
+          <p className="text-xs text-slate-500">Model weight management, field retraining pipeline, and edge telemetry</p>
         </div>
 
         <div className="flex items-center space-x-3 self-start md:self-auto pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">

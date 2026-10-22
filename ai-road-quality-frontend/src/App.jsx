@@ -35,14 +35,14 @@ export default function App() {
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col md:flex-row font-sans">
       
       {/* Mobile Top Header (Visible only on phones/small screens) */}
-      <div className="md:hidden bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between sticky top-0 z-40 shadow-xs">
+      <div className="md:hidden bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
         <div className="flex items-center space-x-2.5">
-          <div className="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 flex items-center justify-center font-bold shadow-xs">
-            <ShieldAlert className="w-5 h-5" />
+          <div className="w-8 h-8 rounded-lg bg-slate-900 text-amber-400 flex items-center justify-center font-bold shadow-xs border border-slate-800">
+            <ShieldAlert className="w-4 h-4" />
           </div>
           <div className="leading-tight">
-            <span className="font-extrabold text-sm text-slate-900 block">AI Road Quality</span>
-            <span className="text-[10px] text-amber-700 font-mono font-bold tracking-wider">MEGA PROJECT</span>
+            <span className="font-bold text-sm text-slate-900 block tracking-tight">RoadQuality</span>
+            <span className="text-[10px] text-slate-500 font-medium">Municipal Works Platform</span>
           </div>
         </div>
         <div className="flex items-center space-x-2">
@@ -55,10 +55,10 @@ export default function App() {
                   window.dispatchEvent(new CustomEvent('open-pwa-install-guide'));
                 }
               }}
-              className="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg bg-blue-50 text-blue-700 border border-blue-200 text-xs font-semibold active:scale-95 transition-all"
+              className="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 text-xs font-semibold active:scale-95 transition-all"
               title="Install Application"
             >
-              <Download className="w-3.5 h-3.5" />
+              <Download className="w-3.5 h-3.5 text-slate-600" />
               <span>Install</span>
             </button>
           )}
