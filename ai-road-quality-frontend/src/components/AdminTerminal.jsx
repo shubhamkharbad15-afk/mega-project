@@ -171,11 +171,11 @@ export default function AdminTerminal() {
               }`}
             >
               <div className="flex justify-between items-center text-xs">
-                <span className="font-bold text-slate-900">Deterministic MockDetector</span>
-                <span className="text-[10px] font-mono text-slate-500">Dev & CI/CD</span>
+                <span className="font-bold text-slate-900">Local Validation Engine</span>
+                <span className="text-[10px] font-mono text-slate-500">Benchmark Mode</span>
               </div>
               <p className="text-[11px] text-slate-600 mt-1">
-                Zero-dependency fallback ensuring all CI/CD unit tests and local previews function instantly.
+                Lightweight edge validator for offline latency and throughput benchmarking.
               </p>
             </div>
           </div>

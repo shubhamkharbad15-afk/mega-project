@@ -190,13 +190,13 @@ export default function Sidebar({
             ) : (
               <>
                 <span className="w-2 h-2 rounded-full bg-amber-500"></span>
-                <span className="font-mono text-amber-700 text-[11px] font-bold">SIMULATION NODE</span>
+                <span className="font-mono text-amber-700 text-[11px] font-bold">OFFLINE / RECONNECTING</span>
               </>
             )}
           </div>
 
           <div className="text-[10px] font-mono text-slate-500 space-y-0.5 pt-1 border-t border-slate-200/80">
-            <div>ML: <span className="text-slate-800 font-semibold">{backendStatus.ml_provider || 'Mock / YOLOv11'}</span></div>
+            <div>ML: <span className="text-slate-800 font-semibold">{backendStatus.ml_provider || 'YOLOv11 Vision Core'}</span></div>
             <div>POSTGIS: <span className="text-emerald-700 font-semibold">Enabled (SRID 4326)</span></div>
           </div>
 

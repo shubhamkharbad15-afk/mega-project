@@ -81,7 +81,7 @@ export default function Navbar({
                     ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' 
                     : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-white'
                 }`}
-                title="Toggle Phone Frame Simulation"
+                title="Toggle Mobile View"
               >
                 {isMobileFrame ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
                 <span>{isMobileFrame ? 'Phone View' : 'Full Width'}</span>
@@ -98,7 +98,7 @@ export default function Navbar({
               ) : (
                 <>
                   <span className="w-2 h-2 rounded-full bg-amber-500"></span>
-                  <span className="text-amber-400 font-mono text-[11px] hidden sm:inline">Simulation Node</span>
+                  <span className="text-amber-400 font-mono text-[11px] hidden sm:inline">Offline</span>
                 </>
               )}
             </div>

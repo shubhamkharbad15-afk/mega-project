@@ -16,7 +16,6 @@ import {
   ChevronRight,
   Leaf,
   SwitchCamera,
-  Play,
   Square,
   Crosshair,
   Sliders,
@@ -59,17 +58,13 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
   const [adviceResult, setAdviceResult] = useState(null);
   const [loadingAdvice, setLoadingAdvice] = useState(false);
 
-  // References & Simulation
+  // References
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const overlayCanvasRef = useRef(null);
   const streamRef = useRef(null);
   const detectionIntervalRef = useRef(null);
   const nativeCameraInputRef = useRef(null);
-  const [isSimulating, setIsSimulating] = useState(false);
-  const simCanvasRef = useRef(null);
-  const simAnimRef = useRef(null);
-  const simRoadOffsetRef = useRef(0);
 
   // Check if browser environment supports WebRTC getUserMedia
   const hasWebRTC = typeof navigator !== 'undefined' && !!navigator?.mediaDevices?.getUserMedia;
@@ -110,7 +105,6 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
   const startCamera = async (targetDeviceId = null, mode = facingMode) => {
     setIsStartingCamera(true);
     setCameraError(null);
-    stopSimulation();
 
     if (!hasWebRTC) {
       setCameraError(
@@ -275,126 +269,6 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
     }
   };
 
-  const stopSimulation = () => {
-    setIsSimulating(false);
-    if (simAnimRef.current) {
-      cancelAnimationFrame(simAnimRef.current);
-      simAnimRef.current = null;
-    }
-  };
-
-  const startSimulation = () => {
-    stopCamera();
-    setCustomUpload(null);
-    setCameraError(null);
-    setIsSimulating(true);
-    setRoadRoughness('IRI 1.1 (Road Sound / Clean)');
-  };
-
-  // Simulated Road Stream Animation Loop (Zero Camera Permissions Required)
-  useEffect(() => {
-    if (!isSimulating) {
-      if (simAnimRef.current) cancelAnimationFrame(simAnimRef.current);
-      return;
-    }
-
-    let lastDetect = performance.now();
-    let currentPotholeY = -200;
-
-    const render = (now) => {
-      if (!simCanvasRef.current) return;
-      const cvs = simCanvasRef.current;
-      if (cvs.width !== 800) cvs.width = 800;
-      if (cvs.height !== 450) cvs.height = 450;
-      const ctx = cvs.getContext('2d');
-
-      simRoadOffsetRef.current = (simRoadOffsetRef.current + 3.5) % 120;
-      currentPotholeY += 3.5;
-      if (currentPotholeY > 600) {
-        currentPotholeY = -350;
-      }
-
-      // Asphalt roadway gradient
-      const grad = ctx.createLinearGradient(0, 0, 0, 450);
-      grad.addColorStop(0, '#334155');
-      grad.addColorStop(0.35, '#1E293B');
-      grad.addColorStop(1, '#0F172A');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 800, 450);
-
-      // Lane boundaries
-      ctx.strokeStyle = '#FFFFFF';
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      ctx.moveTo(90, 450);
-      ctx.lineTo(280, 160);
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.moveTo(710, 450);
-      ctx.lineTo(520, 160);
-      ctx.stroke();
-
-      // Yellow dashed center line
-      ctx.fillStyle = '#F59E0B';
-      for (let y = -60 + simRoadOffsetRef.current; y < 500; y += 80) {
-        if (y < 160) continue;
-        const w = 7 + (y - 160) * 0.035;
-        const h = 38 + (y - 160) * 0.07;
-        ctx.fillRect(400 - w / 2, y, w, h);
-      }
-
-      // Draw Pothole when in view
-      const isPotholeVisible = currentPotholeY > 160 && currentPotholeY < 430;
-      if (isPotholeVisible) {
-        const pScale = 0.5 + (currentPotholeY - 160) * 0.002;
-        ctx.fillStyle = '#050810';
-        ctx.beginPath();
-        ctx.ellipse(330, currentPotholeY, 75 * pScale, 38 * pScale, -0.1, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = '#010307';
-        ctx.beginPath();
-        ctx.ellipse(333, currentPotholeY + 3, 55 * pScale, 26 * pScale, -0.1, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.strokeStyle = '#64748B';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-      }
-
-      // Real-Time YOLO Pothole Detection Sync (Locks onto pothole)
-      if (now - lastDetect > 500) {
-        lastDetect = now;
-        if (isPotholeVisible && currentPotholeY > 230 && currentPotholeY < 390) {
-          const normY = currentPotholeY / 450;
-          const detectedItems = [
-            {
-              label: 'pothole',
-              confidence: 0.94,
-              bbox: [0.28, Math.max(0.15, normY - 0.12), 0.65, Math.min(0.95, normY + 0.14)]
-            }
-          ];
-          setDetections(detectedItems);
-          setRoadRoughness('IRI 4.8 (Cavity / Pothole Detected)');
-          drawBoundingBoxes(detectedItems, 800, 450);
-        } else {
-          setDetections([]);
-          setRoadRoughness('IRI 1.1 (Road Sound / Clean)');
-          drawBoundingBoxes([], 800, 450);
-        }
-      }
-
-      simAnimRef.current = requestAnimationFrame(render);
-    };
-
-    simAnimRef.current = requestAnimationFrame(render);
-
-    return () => {
-      if (simAnimRef.current) cancelAnimationFrame(simAnimRef.current);
-    };
-  }, [isSimulating]);
-
   const handleToggleFacingMode = () => {
     if (availableDevices.length > 1) {
       const currentIndex = availableDevices.findIndex(d => d.deviceId === selectedDeviceId);
@@ -417,11 +291,9 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
       }
     } else {
       stopCamera();
-      stopSimulation();
     }
     return () => {
       stopCamera();
-      stopSimulation();
     };
   }, [activeTab]);
 
@@ -567,75 +439,10 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
     };
   };
 
-  // Generate a realistic high-definition road image locally (Zero CORS / Zero Network Dependencies)
-  const generateSampleRoadDataUrl = (withPothole = true) => {
-    const c = document.createElement('canvas');
-    c.width = 800;
-    c.height = 450;
-    const ctx = c.getContext('2d');
-
-    // Asphalt surface gradient
-    const grad = ctx.createLinearGradient(0, 0, 0, 450);
-    grad.addColorStop(0, '#334155');
-    grad.addColorStop(0.35, '#1E293B');
-    grad.addColorStop(1, '#0F172A');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, 800, 450);
-
-    // Asphalt texture specks
-    for (let i = 0; i < 3500; i++) {
-      const x = Math.random() * 800;
-      const y = 140 + Math.random() * 310;
-      const gray = Math.floor(50 + Math.random() * 80);
-      ctx.fillStyle = `rgb(${gray}, ${gray}, ${gray})`;
-      ctx.fillRect(x, y, Math.random() * 2 + 1, Math.random() * 2 + 1);
-    }
-
-    // Yellow center divider dashed lines
-    ctx.fillStyle = '#F59E0B';
-    for (let y = 170; y < 450; y += 75) {
-      const w = 8 + (y - 170) * 0.04;
-      const h = 42 + (y - 170) * 0.08;
-      ctx.fillRect(400 - w / 2, y, w, h);
-    }
-
-    // White lane boundaries
-    ctx.strokeStyle = '#FFFFFF';
-    ctx.lineWidth = 4;
-    ctx.beginPath();
-    ctx.moveTo(100, 450);
-    ctx.lineTo(280, 160);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(700, 450);
-    ctx.lineTo(520, 160);
-    ctx.stroke();
-
-    if (withPothole) {
-      ctx.fillStyle = '#050810';
-      ctx.beginPath();
-      ctx.ellipse(330, 310, 80, 42, -0.12, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.fillStyle = '#010307';
-      ctx.beginPath();
-      ctx.ellipse(335, 315, 60, 30, -0.12, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.strokeStyle = '#64748B';
-      ctx.lineWidth = 2.5;
-      ctx.stroke();
-    }
-
-    return c.toDataURL('image/jpeg', 0.9);
-  };
-
   // Image analysis runner for user uploads & camera snapshots
   const analyzeLoadedImage = (imageSrc) => {
     setCustomUpload(imageSrc);
     stopCamera();
-    stopSimulation();
     const img = new Image();
     img.crossOrigin = 'anonymous';
     img.onload = () => {
@@ -835,15 +642,6 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
   };
 
   const handleCaptureSnapshot = () => {
-    if (isSimulating && simCanvasRef.current) {
-      const snapshotUrl = simCanvasRef.current.toDataURL('image/jpeg', 0.9);
-      if (detections.length > 0) {
-        triggerReviewModal(detections[0], snapshotUrl);
-      } else {
-        triggerReviewModal({ label: 'Sound Pavement', confidence: 0.0 }, snapshotUrl);
-      }
-      return;
-    }
     if (customUpload) {
       if (detections.length > 0) {
         triggerReviewModal(detections[0], customUpload);
@@ -1002,13 +800,12 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
         {activeTab === 'camera' && (
           <div className="p-4 space-y-4 flex-1">
 
-            {/* Camera Source Selector (Hardware / Simulator / Upload) */}
+            {/* Camera Source Selector */}
             <div className="flex flex-wrap items-center justify-between gap-2 bg-slate-100 p-1.5 rounded-xl border border-slate-200 text-xs">
               <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider pl-1 hidden sm:inline">Feed Source:</span>
               <div className="flex flex-wrap items-center gap-1.5 flex-1 sm:flex-initial justify-end">
                 <button
                   onClick={() => {
-                    stopSimulation();
                     setCustomUpload(null);
                     startCamera();
                   }}
@@ -1022,27 +819,34 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
                   <span>Hardware Webcam</span>
                 </button>
                 <button
-                  onClick={startSimulation}
-                  className={`px-3 py-1.5 rounded-lg font-semibold flex items-center space-x-1.5 transition-all text-xs cursor-pointer ${
-                    isSimulating
-                      ? 'bg-emerald-600 text-white font-bold shadow-xs'
-                      : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'
-                  }`}
+                  onClick={() => nativeCameraInputRef.current?.click()}
+                  className="px-3 py-1.5 rounded-lg font-semibold flex items-center space-x-1.5 transition-all text-xs cursor-pointer bg-white text-slate-700 hover:bg-slate-50 border border-slate-200"
                 >
-                  <Play className="w-3.5 h-3.5 fill-current" />
-                  <span>Road Simulator</span>
+                  <Smartphone className="w-3.5 h-3.5" />
+                  <span>Phone Camera</span>
                 </button>
-                <button
-                  onClick={() => analyzeLoadedImage(generateSampleRoadDataUrl(true))}
-                  className={`px-3 py-1.5 rounded-lg font-semibold flex items-center space-x-1.5 transition-all text-xs cursor-pointer ${
-                    customUpload
-                      ? 'bg-sky-600 text-white font-bold shadow-xs'
-                      : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'
-                  }`}
-                >
-                  <Crosshair className="w-3.5 h-3.5" />
-                  <span>Sample Scan</span>
-                </button>
+                <label className={`px-3 py-1.5 rounded-lg font-semibold flex items-center space-x-1.5 transition-all text-xs cursor-pointer ${
+                  customUpload
+                    ? 'bg-sky-600 text-white font-bold shadow-xs'
+                    : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'
+                }`}>
+                  <Upload className="w-3.5 h-3.5" />
+                  <span>Upload Image</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onClick={(e) => { e.target.value = null; }}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onload = () => analyzeLoadedImage(reader.result);
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                  />
+                </label>
               </div>
             </div>
             
@@ -1056,17 +860,9 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
                 playsInline
                 muted
                 className={`w-full h-full object-cover transition-opacity duration-300 ${
-                  !isCameraActive || customUpload || isSimulating ? 'opacity-0 pointer-events-none absolute inset-0' : 'opacity-100 block'
+                  !isCameraActive || customUpload ? 'opacity-0 pointer-events-none absolute inset-0' : 'opacity-100 block'
                 }`}
               />
-
-              {/* Simulated Moving Road Canvas */}
-              {isSimulating && (
-                <canvas
-                  ref={simCanvasRef}
-                  className="w-full h-full object-cover"
-                />
-              )}
 
               {/* Uploaded Road Image */}
               {customUpload && (
@@ -1078,7 +874,7 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
               )}
 
               {/* Inactive Standby Screen */}
-              {!isCameraActive && !customUpload && !isSimulating && (
+              {!isCameraActive && !customUpload && (
                 <div className="text-center p-6 space-y-3 z-10">
                   <div className="w-14 h-14 rounded-2xl bg-slate-800 text-amber-400 flex items-center justify-center mx-auto border border-slate-700 shadow-md">
                     <Camera className="w-7 h-7" />
@@ -1088,17 +884,10 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
                       {isStartingCamera ? 'Connecting Hardware Camera...' : 'Camera & Pavement Sensor Standby'}
                     </h3>
                     <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1 leading-relaxed">
-                      Select your feed source below: launch the road simulator, connect your physical webcam, or scan a road photo.
+                      Connect your camera or upload a road inspection photo to run real-time defect analysis.
                     </p>
                   </div>
                   <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-                    <button
-                      onClick={startSimulation}
-                      className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow-md transition-all inline-flex items-center space-x-1.5 cursor-pointer"
-                    >
-                      <Play className="w-3.5 h-3.5 fill-current" />
-                      <span>Launch Road Simulator</span>
-                    </button>
                     {hasWebRTC && (
                       <button
                         onClick={() => startCamera()}
@@ -1118,13 +907,6 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
                         )}
                       </button>
                     )}
-                    <button
-                      onClick={() => analyzeLoadedImage(generateSampleRoadDataUrl(true))}
-                      className="bg-sky-600 hover:bg-sky-700 active:scale-95 text-white font-semibold px-4 py-2.5 rounded-xl text-xs shadow-md transition-all inline-flex items-center space-x-1.5 cursor-pointer"
-                    >
-                      <Crosshair className="w-3.5 h-3.5" />
-                      <span>Instant Road Scan</span>
-                    </button>
                     <button
                       onClick={() => nativeCameraInputRef.current?.click()}
                       className="bg-slate-700 hover:bg-slate-600 active:scale-95 text-white font-semibold px-4 py-2.5 rounded-xl text-xs shadow-md transition-all inline-flex items-center space-x-1.5 cursor-pointer"
@@ -1166,7 +948,7 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
               <canvas ref={canvasRef} className="hidden" />
 
               {/* Top-Left Telemetry HUD (Clean Light Frosted Glass) */}
-              {(isCameraActive || isSimulating) && !customUpload && (
+              {isCameraActive && !customUpload && (
                 <div className="absolute top-2.5 left-2.5 bg-white/90 backdrop-blur border border-slate-200 rounded-lg p-2 font-mono text-[10px] space-y-0.5 text-slate-800 shadow-md z-20">
                   <div className="text-sky-700 flex items-center space-x-1 font-bold">
                     <Compass className="w-3 h-3 animate-spin" />
@@ -1174,13 +956,13 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
                   </div>
                   <div>SURFACE: <span className={`font-bold ${detections.length > 0 ? 'text-red-600' : 'text-emerald-700'}`}>{roadRoughness}</span></div>
                   <div className="hidden xs:block">
-                    RES: <span className="text-slate-900 font-bold">{isSimulating ? '800×450' : `${videoResolution.width}×${videoResolution.height}`}</span>
+                    RES: <span className="text-slate-900 font-bold">{`${videoResolution.width}×${videoResolution.height}`}</span>
                   </div>
                 </div>
               )}
 
               {/* Top-Right HUD */}
-              {(isCameraActive || isSimulating) && !customUpload && (
+              {isCameraActive && !customUpload && (
                 <div className="absolute top-2.5 right-2.5 bg-white/90 backdrop-blur border border-slate-200 rounded-lg p-2 font-mono text-[10px] text-right shadow-md z-20">
                   <div className="text-slate-500">ENGINE</div>
                   <div className="text-slate-900 font-bold">YOLOv11 Pixel-Scan</div>
@@ -1189,7 +971,7 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
               )}
 
               {/* Bottom In-Stream Action Bar */}
-              {(isCameraActive || isSimulating || customUpload) && (
+              {(isCameraActive || customUpload) && (
                 <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-auto z-20">
                   {isCameraActive ? (
                     <div className="flex items-center space-x-2">
@@ -1211,20 +993,6 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
                         <Square className="w-3 h-3 fill-current" />
                         <span className="hidden sm:inline">Stop Cam</span>
                       </button>
-                    </div>
-                  ) : isSimulating ? (
-                    <div className="flex items-center space-x-2">
-                      <button
-                        onClick={stopSimulation}
-                        className="bg-white/95 hover:bg-white text-red-600 px-3 py-1.5 rounded-xl text-xs font-semibold shadow-md border border-slate-200 flex items-center space-x-1.5 transition-colors cursor-pointer"
-                        title="Stop Simulation"
-                      >
-                        <Square className="w-3 h-3 fill-current" />
-                        <span>Stop Simulator</span>
-                      </button>
-                      <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-md border border-emerald-300 font-mono">
-                        VIRTUAL FEED
-                      </span>
                     </div>
                   ) : (
                     <button
@@ -1306,20 +1074,6 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
                   </p>
                   <div className="flex flex-wrap items-center gap-2 pt-0.5">
                     <button
-                      onClick={startSimulation}
-                      className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-xs inline-flex items-center space-x-1.5 transition-all cursor-pointer"
-                    >
-                      <Play className="w-3.5 h-3.5 fill-current" />
-                      <span>Use Road Simulator (No Cam Required)</span>
-                    </button>
-                    <button
-                      onClick={() => analyzeLoadedImage(generateSampleRoadDataUrl(true))}
-                      className="bg-sky-600 hover:bg-sky-700 active:scale-95 text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-xs inline-flex items-center space-x-1.5 transition-all cursor-pointer"
-                    >
-                      <Crosshair className="w-3.5 h-3.5" />
-                      <span>Instant Sample Scan</span>
-                    </button>
-                    <button
                       onClick={() => startCamera()}
                       className="bg-amber-500 hover:bg-amber-600 active:scale-95 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs shadow-xs inline-flex items-center space-x-1.5 transition-all cursor-pointer"
                     >
@@ -1331,7 +1085,7 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
                       className="bg-slate-700 hover:bg-slate-600 active:scale-95 text-white font-semibold px-3 py-1.5 rounded-lg text-xs shadow-xs inline-flex items-center space-x-1.5 transition-all cursor-pointer"
                     >
                       <Smartphone className="w-3.5 h-3.5" />
-                      <span>Snap with Phone</span>
+                      <span>Snap with Phone Camera</span>
                     </button>
                   </div>
                 </div>

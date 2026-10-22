@@ -364,12 +364,7 @@ export default function WorkerTerminal({ reports, setReports }) {
                       <span>Ready to certify</span>
                     </span>
                   ) : (
-                    <button
-                      onClick={() => setMilestoneAfter('https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=800&q=80')}
-                      className="text-sky-700 text-[10px] underline font-bold"
-                    >
-                      (Simulate Camera Snap)
-                    </button>
+                    <span className="text-slate-400 text-[10px] font-medium">Awaiting photo capture</span>
                   )}
                 </div>
               </div>
