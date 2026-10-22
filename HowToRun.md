@@ -79,7 +79,7 @@ The database requires PostgreSQL 16 with the **PostGIS** geospatial extension en
 
 ---
 
-## Step 3: Run the React & Tailwind Frontend
+## Step 3: Run the React & Tailwind Frontend (Web Portal)
 
 1. Open a new terminal window and navigate to the frontend directory:
    ```bash
@@ -98,7 +98,30 @@ The database requires PostgreSQL 16 with the **PostGIS** geospatial extension en
 
 4. Access the application:
    * **Local Desktop Browser:** [http://localhost:5173](http://localhost:5173)
-   * **Mobile Device on Same Wi-Fi:** Open `http://<YOUR-LOCAL-IP>:5173` (e.g. `http://192.168.0.105:5173`) on your iPhone or Android browser.
+   * **Mobile Device on Same Wi-Fi:** Open `http://<YOUR-LOCAL-IP>:5173` (e.g. `http://192.168.0.100:5173`) on your iPhone or Android browser.
+
+---
+
+## Step 4: Run the React Native Mobile Sensing App (iOS / Android)
+
+1. Open a new terminal window and navigate to the mobile directory:
+   ```bash
+   cd ai-road-quality-mobile
+   ```
+
+2. Install dependencies (first time only):
+   ```bash
+   npm install
+   ```
+
+3. Start the Expo development server:
+   ```bash
+   npm start
+   ```
+
+4. Open on your phone:
+   * Install **Expo Go** from the App Store (iOS) or Play Store (Android).
+   * Scan the terminal QR code to run the live mobile app on your physical device with native camera and accelerometer vibration sensing.
 
 ---
 

@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "AI Road Quality",
+    "slug": "ai-road-quality-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "sdkVersion": "57.0.0",
+    "owner": "harshwardhangalande",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#F8FAFC"
+    },
+    "ios": {
+      "bundleIdentifier": "com.harshwardhangalande.airoadquality",
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app requires camera access to detect road potholes and distresses.",
+        "NSLocationWhenInUseUsageDescription": "This app uses your location to geotag road defects for municipal maintenance."
+      }
+    },
+    "android": {
+      "package": "com.harshwardhangalande.airoadquality",
+      "permissions": [
+        "CAMERA",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c46a36d5-4958-4108-b8bd-68ab8994f6b8"
+      }
+    }
+  }
+}

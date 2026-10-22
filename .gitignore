@@ -11,7 +11,7 @@ __pycache__/
 Thumbs.db
 *.log
 
-# Frontend Dependencies & Build Artifacts
+# Frontend & Mobile Dependencies & Build Artifacts
 node_modules/
 **/node_modules/
 dist/
@@ -19,6 +19,8 @@ dist/
 dist-ssr/
 .vite/
 **/.vite/
+.expo/
+**/.expo/
 *.local
 
 # Uploads
@@ -27,3 +29,6 @@ ai-road-quality-backend/app/uploads/*
 ai-road-quality-backend/uploads/*
 !ai-road-quality-backend/uploads/.gitkeep
 uploads/
+screenshot.png
+crop.png
+BACKEND_CHANGES.md

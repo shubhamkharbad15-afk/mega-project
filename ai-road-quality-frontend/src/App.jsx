@@ -5,8 +5,9 @@ import GovernmentTerminal from './components/GovernmentTerminal';
 import WorkerTerminal from './components/WorkerTerminal';
 import AdminTerminal from './components/AdminTerminal';
 import ErrorBoundary from './components/ErrorBoundary';
+import InstallPwaBanner from './components/InstallPwaBanner';
 import { INITIAL_REPORTS, checkBackendHealth, getNearbyReports } from './api';
-import { ShieldAlert, Menu, X } from 'lucide-react';
+import { ShieldAlert, Menu, X, Download } from 'lucide-react';
 
 export default function App() {
   const [activeTerminal, setActiveTerminal] = useState('citizen');
@@ -42,13 +43,29 @@ export default function App() {
             <span className="text-[10px] text-amber-700 font-mono font-bold tracking-wider">MEGA PROJECT</span>
           </div>
         </div>
-        <button
-          onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
-          className="p-2 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 active:scale-95 transition-all"
-          aria-label="Toggle navigation drawer"
-        >
-          {isMobileNavOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => {
+              if (window.__triggerPwaInstall) {
+                window.__triggerPwaInstall();
+              } else {
+                window.dispatchEvent(new CustomEvent('open-pwa-install-guide'));
+              }
+            }}
+            className="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg bg-blue-50 text-blue-700 border border-blue-200 text-xs font-semibold active:scale-95 transition-all"
+            title="Install Application"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span>Install</span>
+          </button>
+          <button
+            onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
+            className="p-2 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 active:scale-95 transition-all"
+            aria-label="Toggle navigation drawer"
+          >
+            {isMobileNavOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
 
       {/* Left Sidebar Navigation (Desktop sticky / Mobile drawer) */}
@@ -146,6 +163,9 @@ export default function App() {
         </footer>
 
       </div>
+
+      {/* Progressive Web App Install Banner (Safari iOS & Chrome desktop/mobile) */}
+      <InstallPwaBanner />
 
     </div>
   );
