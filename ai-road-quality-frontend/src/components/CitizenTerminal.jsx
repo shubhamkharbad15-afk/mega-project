@@ -9,8 +9,6 @@ import {
   CheckCircle2, 
   ThumbsUp, 
   Upload, 
-  Volume2, 
-  VolumeX, 
   ShieldCheck, 
   Compass, 
   ChevronRight,
@@ -42,7 +40,6 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
   const [detections, setDetections] = useState([]);
   const [videoResolution, setVideoResolution] = useState({ width: 1280, height: 720 });
   const [inferenceLatency, setInferenceLatency] = useState(18);
-  const [soundEnabled, setSoundEnabled] = useState(true);
   const [customUpload, setCustomUpload] = useState(null);
   const [sensitivity, setSensitivity] = useState('strict'); // 'strict' | 'normal' | 'high'
   const [roadRoughness, setRoadRoughness] = useState('IRI 1.1 (Good)');
@@ -387,7 +384,7 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
     // A clean road has less than 2 dark cavity cells
     if (darkCells.length < 2) {
       return {
-        roughness: 'IRI 1.1 (✓ Road Sound / Clean)',
+        roughness: 'IRI 1.1 (✓ Road Clear / Good Condition)',
         detections: []
       };
     }
@@ -406,7 +403,7 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
     // If dark cells span the entire horizon (> 75%), it is ambient shadow/dusk, not a localized pothole
     if (clusterW > cols * 0.75 || clusterH > rows * 0.75) {
       return {
-        roughness: 'IRI 1.3 (Ambient Shadow / Sound)',
+        roughness: 'IRI 1.3 (Ambient Shadow / Clear)',
         detections: []
       };
     }
@@ -492,7 +489,7 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
           triggerReviewModal(analysis.detections[0], imageSrc);
         } else {
           setReviewModalData(null);
-          setNotificationToast('✓ Surface Analysis: Road is in Sound Condition. Zero potholes detected (0% risk).');
+          setNotificationToast('✓ Surface Analysis: Road is in Good Condition. Zero potholes detected (0% risk).');
           setTimeout(() => setNotificationToast(null), 5000);
         }
       } catch (err) {
@@ -547,7 +544,7 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
         if (finalItems.length > 0) {
           triggerReviewModal(finalItems[0], snapshotUrl);
         } else {
-          triggerReviewModal({ label: 'Sound Pavement', confidence: 0.0 }, snapshotUrl);
+          triggerReviewModal({ label: 'Good Condition (Clear Pavement)', confidence: 0.0 }, snapshotUrl);
         }
       }
     }, 'image/jpeg', 0.85);
@@ -566,7 +563,7 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
     if (items.length === 0) {
       ctx.fillStyle = 'rgba(255, 255, 255, 0.94)';
       ctx.font = `bold ${Math.round(13 * scale)}px Inter, sans-serif`;
-      const label = '✓ ROAD SOUND — NO DEFECT DETECTED';
+      const label = '✓ ROAD CLEAR — NO DEFECT DETECTED';
       const w = ctx.measureText(label).width;
       
       const boxW = w + Math.round(24 * scale);
@@ -617,18 +614,18 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
   };
 
   const triggerReviewModal = (defectItem, imageUrl) => {
-    const isClean = defectItem.label.toLowerCase().includes('sound') || defectItem.confidence <= 0.2;
+    const isClean = defectItem.label.toLowerCase().includes('good') || defectItem.label.toLowerCase().includes('clear') || defectItem.label.toLowerCase().includes('sound') || defectItem.confidence <= 0.2;
     const isPothole = !isClean && defectItem.label.toLowerCase().includes('pothole');
     const defectName = isClean
-      ? 'Sound Pavement (Good Condition)'
+      ? 'Good Condition (Clear Pavement)'
       : (isPothole ? 'Pothole (D40)' : 'Road Distress');
 
     const calculatedRisk = isClean ? 0.0 : defectItem.confidence;
 
     setReviewModalData({
-      title: isClean ? 'Routine Road Audit - Pavement Sound' : `${defectName} Detected via Camera`,
+      title: isClean ? 'Routine Road Audit - Pavement Intact' : `${defectName} Detected via Camera`,
       description: isClean
-        ? 'Camera frame and AI CV vision verified smooth pavement with zero cavities or distresses. Pavement meets municipal standards.'
+        ? 'Camera frame and vision engine verified smooth pavement with zero cavities or distresses. Pavement meets municipal standards.'
         : `Camera scan verified ${defectName.toLowerCase()} with ${Math.round(defectItem.confidence * 100)}% confidence. Pavement requires leveling and compaction.`,
       defect_type: defectName,
       severity: isClean ? 'low' : (defectItem.confidence > 0.8 ? 'high' : 'medium'),
@@ -646,7 +643,7 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
       if (detections.length > 0) {
         triggerReviewModal(detections[0], customUpload);
       } else {
-        triggerReviewModal({ label: 'Sound Pavement', confidence: 0.0 }, customUpload);
+        triggerReviewModal({ label: 'Good Condition (Clear Pavement)', confidence: 0.0 }, customUpload);
       }
       return;
     }
@@ -739,13 +736,6 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
             </div>
 
             <div className="flex items-center space-x-2 flex-shrink-0">
-              <button
-                onClick={() => setSoundEnabled(!soundEnabled)}
-                className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 transition-colors shadow-2xs"
-                title={soundEnabled ? "Mute hazard alert" : "Enable hazard audio alert"}
-              >
-                {soundEnabled ? <Volume2 className="w-4 h-4 text-amber-600" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
-              </button>
               <div className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold ${
                 isCameraActive 
                   ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
@@ -1014,7 +1004,7 @@ export default function CitizenTerminal({ reports, setReports, isMobileFrame }) 
                       className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-3.5 py-1.5 rounded-xl text-xs shadow-md flex items-center space-x-1.5 transition-all ml-auto cursor-pointer"
                     >
                       <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>Log Sound Road Audit (0% Risk)</span>
+                      <span>Log Good Condition Audit (0% Risk)</span>
                     </button>
                   )}
                 </div>
