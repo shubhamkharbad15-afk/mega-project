@@ -20,9 +20,7 @@ PUNE_REPORTS = [
         "severity": "high",
         "latitude": 18.5204,
         "longitude": 73.8567,
-        "evidence": [
-            "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=800&q=80"
-        ],
+        "evidence": ["/images/pothole-deep-cavity.jpg"],
     },
     {
         "id": uuid.UUID("22222222-2222-4222-8222-222222222222"),
@@ -32,9 +30,7 @@ PUNE_REPORTS = [
         "severity": "medium",
         "latitude": 18.5314,
         "longitude": 73.8446,
-        "evidence": [
-            "https://images.unsplash.com/photo-1584463699059-994326f63456?auto=format&fit=crop&w=800&q=80"
-        ],
+        "evidence": ["/images/alligator-cracking.jpg"],
     },
     {
         "id": uuid.UUID("33333333-3333-4333-8333-333333333333"),
@@ -44,9 +40,7 @@ PUNE_REPORTS = [
         "severity": "low",
         "latitude": 18.5089,
         "longitude": 73.8078,
-        "evidence": [
-            "https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=800&q=80"
-        ],
+        "evidence": ["/images/transverse-joint-fracture.jpg"],
     },
     {
         "id": uuid.UUID("44444444-4444-4444-8444-444444444444"),
@@ -56,9 +50,7 @@ PUNE_REPORTS = [
         "severity": "high",
         "latitude": 18.5913,
         "longitude": 73.7389,
-        "evidence": [
-            "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80"
-        ],
+        "evidence": ["/images/waterlogged-pothole.jpg"],
     },
     {
         "id": uuid.UUID("55555555-5555-4555-8555-555555555555"),
@@ -68,9 +60,7 @@ PUNE_REPORTS = [
         "severity": "high",
         "latitude": 18.5065,
         "longitude": 73.8322,
-        "evidence": [
-            "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80"
-        ],
+        "evidence": ["/images/trench-subsidence.jpg"],
     },
     {
         "id": uuid.UUID("66666666-6666-4666-8666-666666666666"),
@@ -80,9 +70,7 @@ PUNE_REPORTS = [
         "severity": "high",
         "latitude": 18.5604,
         "longitude": 73.9168,
-        "evidence": [
-            "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=800&q=80"
-        ],
+        "evidence": ["/images/crater-pier-transition.jpg"],
     },
     {
         "id": uuid.UUID("77777777-7777-4777-8777-777777777777"),
@@ -92,9 +80,7 @@ PUNE_REPORTS = [
         "severity": "medium",
         "latitude": 18.5638,
         "longitude": 73.8077,
-        "evidence": [
-            "https://images.unsplash.com/photo-1584463699059-994326f63456?auto=format&fit=crop&w=800&q=80"
-        ],
+        "evidence": ["/images/rutting-longitudinal.jpg"],
     },
     {
         "id": uuid.UUID("88888888-8888-4888-8888-888888888888"),
@@ -104,9 +90,7 @@ PUNE_REPORTS = [
         "severity": "medium",
         "latitude": 18.4912,
         "longitude": 73.8291,
-        "evidence": [
-            "https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=800&q=80"
-        ],
+        "evidence": ["/images/edge-spalling.jpg"],
     },
     {
         "id": uuid.UUID("99999999-9999-4999-8999-999999999999"),
@@ -116,9 +100,7 @@ PUNE_REPORTS = [
         "severity": "medium",
         "latitude": 18.5398,
         "longitude": 73.8297,
-        "evidence": [
-            "https://images.unsplash.com/photo-1584463699059-994326f63456?auto=format&fit=crop&w=800&q=80"
-        ],
+        "evidence": ["/images/block-cracking.jpg"],
     },
     {
         "id": uuid.UUID("aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"),
@@ -128,9 +110,7 @@ PUNE_REPORTS = [
         "severity": "medium",
         "latitude": 18.5144,
         "longitude": 73.9272,
-        "evidence": [
-            "https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=800&q=80"
-        ],
+        "evidence": ["/images/patch-corrugation.jpg"],
     },
 ]
 

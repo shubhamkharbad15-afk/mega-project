@@ -312,10 +312,10 @@ export const INITIAL_REPORTS = [
     upvotes: 42,
     budget_allocated: 7500,
     contractor: 'Apex Infra Projects Ltd.',
-    imageUrl: 'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '/images/pothole-deep-cavity.jpg',
     milestones: {
-      before: 'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=800&q=80',
-      in_progress: null,
+      before: '/images/pothole-deep-cavity.jpg',
+      in_progress: '/images/repair-in-progress.jpg',
       resolved: null
     }
   },
@@ -336,10 +336,10 @@ export const INITIAL_REPORTS = [
     upvotes: 28,
     budget_allocated: 14200,
     contractor: 'Metro Roadworks Corp.',
-    imageUrl: 'https://images.unsplash.com/photo-1584463699059-994326f63456?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '/images/alligator-cracking.jpg',
     milestones: {
-      before: 'https://images.unsplash.com/photo-1584463699059-994326f63456?auto=format&fit=crop&w=800&q=80',
-      in_progress: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80',
+      before: '/images/alligator-cracking.jpg',
+      in_progress: '/images/repair-in-progress.jpg',
       resolved: null
     }
   },
@@ -360,11 +360,11 @@ export const INITIAL_REPORTS = [
     upvotes: 19,
     budget_allocated: 4800,
     contractor: 'GreenPave Highway Solutions',
-    imageUrl: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '/images/transverse-joint-fracture.jpg',
     milestones: {
-      before: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=800&q=80',
-      in_progress: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80',
-      resolved: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=800&q=80'
+      before: '/images/transverse-joint-fracture.jpg',
+      in_progress: '/images/repair-in-progress.jpg',
+      resolved: '/images/repair-resolved.jpg'
     }
   },
   {
@@ -384,9 +384,9 @@ export const INITIAL_REPORTS = [
     upvotes: 64,
     budget_allocated: 9200,
     contractor: 'Pending Assignment',
-    imageUrl: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '/images/waterlogged-pothole.jpg',
     milestones: {
-      before: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80',
+      before: '/images/waterlogged-pothole.jpg',
       in_progress: null,
       resolved: null
     }
@@ -408,9 +408,9 @@ export const INITIAL_REPORTS = [
     upvotes: 51,
     budget_allocated: 11500,
     contractor: 'Apex Infra Projects Ltd.',
-    imageUrl: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '/images/trench-subsidence.jpg',
     milestones: {
-      before: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80',
+      before: '/images/trench-subsidence.jpg',
       in_progress: null,
       resolved: null
     }
@@ -432,9 +432,9 @@ export const INITIAL_REPORTS = [
     upvotes: 39,
     budget_allocated: 8800,
     contractor: 'Metro Roadworks Corp.',
-    imageUrl: 'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '/images/crater-pier-transition.jpg',
     milestones: {
-      before: 'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=800&q=80',
+      before: '/images/crater-pier-transition.jpg',
       in_progress: null,
       resolved: null
     }
@@ -456,10 +456,10 @@ export const INITIAL_REPORTS = [
     upvotes: 22,
     budget_allocated: 6400,
     contractor: 'GreenPave Highway Solutions',
-    imageUrl: 'https://images.unsplash.com/photo-1584463699059-994326f63456?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '/images/rutting-longitudinal.jpg',
     milestones: {
-      before: 'https://images.unsplash.com/photo-1584463699059-994326f63456?auto=format&fit=crop&w=800&q=80',
-      in_progress: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80',
+      before: '/images/rutting-longitudinal.jpg',
+      in_progress: '/images/repair-in-progress.jpg',
       resolved: null
     }
   },
@@ -480,9 +480,9 @@ export const INITIAL_REPORTS = [
     upvotes: 31,
     budget_allocated: 7900,
     contractor: 'Apex Infra Projects Ltd.',
-    imageUrl: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '/images/edge-spalling.jpg',
     milestones: {
-      before: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=800&q=80',
+      before: '/images/edge-spalling.jpg',
       in_progress: null,
       resolved: null
     }
@@ -504,10 +504,10 @@ export const INITIAL_REPORTS = [
     upvotes: 27,
     budget_allocated: 8300,
     contractor: 'Metro Roadworks Corp.',
-    imageUrl: 'https://images.unsplash.com/photo-1584463699059-994326f63456?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '/images/block-cracking.jpg',
     milestones: {
-      before: 'https://images.unsplash.com/photo-1584463699059-994326f63456?auto=format&fit=crop&w=800&q=80',
-      in_progress: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80',
+      before: '/images/block-cracking.jpg',
+      in_progress: '/images/repair-in-progress.jpg',
       resolved: null
     }
   },
@@ -528,9 +528,9 @@ export const INITIAL_REPORTS = [
     upvotes: 18,
     budget_allocated: 5200,
     contractor: 'Pending Assignment',
-    imageUrl: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '/images/patch-corrugation.jpg',
     milestones: {
-      before: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=800&q=80',
+      before: '/images/patch-corrugation.jpg',
       in_progress: null,
       resolved: null
     }
