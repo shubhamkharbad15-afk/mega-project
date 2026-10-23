@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { LogIn, UserPlus, X } from 'lucide-react';
-import { loginUser, registerUser, getCurrentUser } from '../api';
+import { loginUser, registerUser, getCurrentUser } from '../hooks/apis/auth';
 
 export default function AuthDialog({ onClose, onAuthenticated }) {
   const [mode, setMode] = useState('login');

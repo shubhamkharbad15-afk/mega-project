@@ -5,6 +5,7 @@ from fastapi import (
     status,
 )
 from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi.security import OAuth2PasswordRequestForm
 
 from app.auth.schemas import (
     LoginRequest,
@@ -26,7 +27,6 @@ router = APIRouter(
     prefix="/auth",
     tags=["Authentication"],
 )
-
 
 @router.post(
     "/register",
@@ -52,20 +52,44 @@ async def register(
 
     return user
 
+# @router.post(
+#     "/login",
+#     response_model=TokenResponse,
+# )
+# async def login(
+#     data: LoginRequest,
+#     db: AsyncSession = Depends(get_db),
+# ):
+
+#     user = await authenticate_user(
+#         db,
+#         data.email,
+#         data.password,
+#     )
+
+#     if not user:
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED,
+#             detail="Invalid email or password",
+#         )
+
+#     return TokenResponse(
+#         access_token=issue_token(user)
+#     )
 
 @router.post(
     "/login",
     response_model=TokenResponse,
 )
 async def login(
-    data: LoginRequest,
+    # Use OAuth2PasswordRequestForm instead of LoginRequest
+    form_data: OAuth2PasswordRequestForm = Depends(),
     db: AsyncSession = Depends(get_db),
 ):
-
     user = await authenticate_user(
         db,
-        data.email,
-        data.password,
+        form_data.username,
+        form_data.password,
     )
 
     if not user:
@@ -77,7 +101,6 @@ async def login(
     return TokenResponse(
         access_token=issue_token(user)
     )
-
 
 @router.get(
     "/me",
