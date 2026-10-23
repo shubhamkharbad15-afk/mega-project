@@ -1,0 +1,43 @@
+services:
+
+  api:
+
+    build: .
+
+    ports:
+      - "8000:8000"
+
+    env_file:
+      - .env
+
+    volumes:
+      - ./uploads:/app/uploads
+      - ./models:/app/models
+
+    depends_on:
+      - postgres
+
+
+  postgres:
+
+    image: postgis/postgis:16-3.4
+
+    environment:
+
+      POSTGRES_DB: road_quality
+
+      POSTGRES_USER: roaduser
+
+      POSTGRES_PASSWORD: roadpassword
+
+    ports:
+      # Host 5433 avoids conflict with native Windows PostgreSQL on 5432
+      - "5433:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+
+volumes:
+
+  postgres_data:

@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+/* Custom Scrollbars for Light Mode */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Radar pulse animation for sensing */
+@keyframes radar-sweep {
+  0% { transform: translateY(0%); opacity: 0.8; }
+  50% { opacity: 0.2; }
+  100% { transform: translateY(100%); opacity: 0.8; }
+}
+
+.animate-radar-sweep {
+  animation: radar-sweep 2.4s ease-in-out infinite alternate;
+}
+
+/* Adaptive theme layer. The existing Tailwind utility classes remain intact;
+   these scoped overrides recolor the shared application chrome in dark mode. */
+:root { color-scheme: light; }
+:root[data-theme='dark'] { color-scheme: dark; }
+html, body, #root { min-height: 100%; }
+body { transition: background-color .2s ease, color .2s ease; }
+
+:root[data-theme='dark'] body { background: #0b1120; color: #e5edf8; }
+:root[data-theme='dark'] .app-shell { background: #0b1120 !important; color: #e5edf8 !important; }
+:root[data-theme='dark'] .app-shell .bg-white,
+:root[data-theme='dark'] .app-shell .bg-white\/95 { background-color: #111b2e !important; }
+:root[data-theme='dark'] .app-shell .bg-slate-50,
+:root[data-theme='dark'] .app-shell .bg-slate-50\/60,
+:root[data-theme='dark'] .app-shell .bg-slate-100 { background-color: #172338 !important; }
+:root[data-theme='dark'] .app-shell .bg-slate-200 { background-color: #26364d !important; }
+:root[data-theme='dark'] .app-shell .text-slate-950,
+:root[data-theme='dark'] .app-shell .text-slate-900,
+:root[data-theme='dark'] .app-shell .text-slate-800,
+:root[data-theme='dark'] .app-shell .text-slate-700 { color: #e5edf8 !important; }
+:root[data-theme='dark'] .app-shell .text-slate-600,
+:root[data-theme='dark'] .app-shell .text-slate-500 { color: #a8b8ce !important; }
+:root[data-theme='dark'] .app-shell .text-slate-400 { color: #8497b2 !important; }
+:root[data-theme='dark'] .app-shell .border-slate-200,
+:root[data-theme='dark'] .app-shell .border-slate-300 { border-color: #2a3a52 !important; }
+:root[data-theme='dark'] .app-shell .border-slate-100 { border-color: #223149 !important; }
+:root[data-theme='dark'] .app-shell .hover\:bg-slate-50:hover,
+:root[data-theme='dark'] .app-shell .hover\:bg-slate-100:hover,
+:root[data-theme='dark'] .app-shell .hover\:bg-slate-200:hover { background-color: #223149 !important; }
+:root[data-theme='dark'] .app-shell input,
+:root[data-theme='dark'] .app-shell textarea,
+:root[data-theme='dark'] .app-shell select { background-color: #101b2d; color: #e5edf8; border-color: #354760; }
+:root[data-theme='dark'] .app-shell input::placeholder,
+:root[data-theme='dark'] .app-shell textarea::placeholder { color: #8194af; }
+:root[data-theme='dark'] .app-shell footer { background-color: #111b2e !important; border-color: #2a3a52 !important; }
+:root[data-theme='dark'] .app-shell .shadow-sm,
+:root[data-theme='dark'] .app-shell .shadow-xl { --tw-shadow-color: rgb(0 0 0 / .24); }
+
+.theme-toggle { white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+/* Dark theme refinements for common utility combinations used by the terminals. */
+:root[data-theme='dark'] .app-shell .bg-slate-50\/70,
+:root[data-theme='dark'] .app-shell .bg-slate-50\/80,
+:root[data-theme='dark'] .app-shell .bg-white\/90 { background-color: #111b2e !important; }
+:root[data-theme='dark'] .app-shell .text-slate-300 { color: #61738d !important; }
+:root[data-theme='dark'] .app-shell .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+:root[data-theme='dark'] .app-shell .divide-slate-200 > :not([hidden]) ~ :not([hidden]) { border-color: #223149 !important; }
+:root[data-theme='dark'] .app-shell .hover\:bg-slate-50\/80:hover,
+:root[data-theme='dark'] .app-shell .hover\:bg-slate-50\/70:hover { background-color: #172338 !important; }
+:root[data-theme='dark'] .app-shell .bg-emerald-50 { background-color: #10352d !important; }
+:root[data-theme='dark'] .app-shell .bg-sky-50 { background-color: #102f45 !important; }
+:root[data-theme='dark'] .app-shell .bg-amber-50 { background-color: #3a2b12 !important; }
+:root[data-theme='dark'] .app-shell .text-emerald-800,
+:root[data-theme='dark'] .app-shell .text-emerald-900 { color: #8de0bd !important; }
+:root[data-theme='dark'] .app-shell .text-sky-800 { color: #8acbff !important; }
+:root[data-theme='dark'] .app-shell .text-amber-900,
+:root[data-theme='dark'] .app-shell .text-amber-950 { color: #f9d58a !important; }
+:root[data-theme='dark'] .app-shell .border-emerald-200,
+:root[data-theme='dark'] .app-shell .border-sky-200,
+:root[data-theme='dark'] .app-shell .border-amber-200 { border-color: #3a506b !important; }

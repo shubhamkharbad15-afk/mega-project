@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Training data and generated weights (keep the source project in models/)
+backend/models/best.pt
+backend/models/road_hazard_training/data/
+backend/models/road_hazard_training/runs/
+backend/models/road_hazard_training/.venv/
+
+# Node
+node_modules/
+frontend/dist/
+.expo/
